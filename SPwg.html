@@ -1,0 +1,1042 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>网关问题合集</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* 全局样式重置 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Segoe UI", "Microsoft YaHei", sans-serif;
+        }
+        
+        /* 主体布局 */
+        body {
+            display: flex;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+        
+        /* 侧边栏样式 */
+        #sidebar {
+            width: 280px;
+            background: linear-gradient(180deg, #2c3e50 0%, #1a2530 100%);
+            color: white;
+            height: 100vh;
+            overflow-y: auto;
+            position: fixed;
+            padding: 20px 0;
+            box-shadow: 3px 0 15px rgba(0, 0, 0, 0.1);
+            z-index: 100;
+        }
+        
+        #sidebar h2 {
+            text-align: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #34495e;
+            font-weight: 400;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        
+        #sidebar h2:hover {
+            color: #3498db;
+        }
+        
+        #sidebar ul {
+            list-style-type: none;
+            counter-reset: section-counter;
+        }
+        
+        #sidebar li {
+            margin-bottom: 5px;
+            position: relative;
+            counter-increment: section-counter;
+        }
+        
+        #sidebar li::before {
+            content: counter(section-counter) ". ";
+            color: #3498db;
+            font-weight: bold;
+            position: absolute;
+            left: 10px;
+            top: 12px;
+        }
+        
+        #sidebar a {
+            display: block;
+            color: #ecf0f1;
+            text-decoration: none;
+            padding: 12px 25px 12px 30px;
+            transition: all 0.3s;
+            border-left: 3px solid transparent;
+        }
+        
+        #sidebar a:hover, #sidebar a.active {
+            background-color: rgba(52, 73, 94, 0.7);
+            color: #3498db;
+            border-left: 3px solid #3498db;
+            padding-left: 35px;
+        }
+        
+        /* 主内容区域 */
+        #content {
+            flex: 1;
+            margin-left: 280px;
+            padding: 40px;
+            background-color: white;
+            min-height: 100vh;
+            box-shadow: -5px 0 15px rgba(0, 0, 0, 0.05);
+            counter-reset: content-counter;
+        }
+        
+        .section {
+            margin-bottom: 50px;
+            padding-bottom: 30px;
+            border-bottom: 1px solid #eaeaea;
+            counter-increment: content-counter;
+        }
+        
+        /* 标题样式 */
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #3498db;
+            font-weight: 500;
+            font-size: 2.2rem;
+        }
+        
+        h2 {
+            color: #3498db;
+            margin: 30px 0 20px 0;
+            padding-left: 15px;
+            border-left: 4px solid #3498db;
+            font-weight: 500;
+        }
+        
+        h2::before {
+            content: counter(content-counter) ". ";
+            color: #3498db;
+            font-weight: bold;
+            margin-right: 5px;
+        }
+        
+        h3 {
+            color: #16a085;
+            margin: 25px 0 15px 0;
+            font-weight: 500;
+        }
+        
+        /* 文本样式 */
+        p {
+            margin-bottom: 18px;
+        }
+        
+        pre {
+            background-color: #f8f9fa;
+            padding: 18px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 18px 0;
+            border-left: 4px solid #3498db;
+            font-size: 0.95rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        
+        code {
+            background-color: #f8f9fa;
+            padding: 3px 6px;
+            border-radius: 4px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            color: #e74c3c;
+            font-size: 0.9rem;
+        }
+        
+        blockquote {
+            border-left: 4px solid #3498db;
+            padding: 15px 20px;
+            margin: 20px 0;
+            background-color: #f8f9fa;
+            border-radius: 0 8px 8px 0;
+            color: #555;
+            font-style: italic;
+        }
+        
+        /* 图片容器样式 */
+        .image-container {
+            margin: 20px 0;
+            text-align: center;
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+        }
+        
+        .image-container img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 5px;
+            transition: transform 0.3s, box-shadow 0.3s;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            cursor: pointer;
+        }
+        
+        .image-container img:hover {
+            transform: scale(1.02);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+        }
+        
+        .image-desc {
+            background-color: #f8f9fa;
+            padding: 12px;
+            margin: 15px 0;
+            border-radius: 5px;
+            font-style: italic;
+            color: #666;
+            border-left: 3px solid #3498db;
+        }
+        
+        /* 特殊样式块 */
+        .highlight {
+            background-color: #fffacd;
+            padding: 3px 6px;
+            border-radius: 3px;
+        }
+        
+        .warning {
+            background-color: #ffeaa7;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 18px 0;
+            border-left: 4px solid #fdcb6e;
+            color: #7d6608;
+        }
+        
+        .note {
+            background-color: #dfe6e9;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 18px 0;
+            border-left: 4px solid #636e72;
+            color: #2d3436;
+        }
+        
+        /* 表格样式 */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        table, th, td {
+            border: 1px solid #e0e0e0;
+        }
+        
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+        }
+        
+        th {
+            background-color: #f2f2f2;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        
+        tr:hover {
+            background-color: #f1f8ff;
+        }
+        
+        /* 链接样式 */
+        a {
+            color: #3498db;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        a:hover {
+            color: #2980b9;
+            text-decoration: underline;
+        }
+        
+        /* 列表样式 */
+        ol, ul {
+            margin-left: 25px;
+            margin-bottom: 20px;
+        }
+        
+        li {
+            margin-bottom: 8px;
+        }
+        
+        /* 返回顶部按钮 */
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #3498db;
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 3px 15px rgba(52, 152, 219, 0.5);
+            transition: all 0.3s;
+            opacity: 0;
+            visibility: hidden;
+            z-index: 99;
+        }
+        
+        .back-to-top.show {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .back-to-top:hover {
+            background: #2980b9;
+            transform: translateY(-3px);
+        }
+        
+        /* 图片放大模态框 */
+        .image-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.95);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .image-modal.active {
+            display: flex;
+            opacity: 1;
+        }
+        
+        .modal-content {
+            max-width: 90%;
+            max-height: 90%;
+            border-radius: 8px;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.5);
+            transition: transform 0.3s;
+        }
+        
+        .modal-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: none;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            font-size: 24px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.3s;
+            z-index: 1001;
+        }
+        
+        .modal-nav:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        .modal-prev {
+            left: 30px;
+        }
+        
+        .modal-next {
+            right: 30px;
+        }
+        
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            color: white;
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.3s;
+            z-index: 1001;
+        }
+        
+        .modal-close:hover {
+            color: #3498db;
+        }
+        
+        .modal-counter {
+            position: absolute;
+            bottom: 20px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            color: white;
+            font-size: 18px;
+            z-index: 1001;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 1024px) {
+            #sidebar {
+                width: 240px;
+            }
+            #content {
+                margin-left: 240px;
+                padding: 30px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column;
+            }
+            #sidebar {
+                position: relative;
+                width: 100%;
+                height: auto;
+                max-height: 300px;
+            }
+            #content {
+                margin-left: 0;
+                padding: 25px;
+            }
+            
+            .modal-nav {
+                width: 50px;
+                height: 50px;
+                font-size: 20px;
+            }
+            
+            .modal-prev {
+                left: 15px;
+            }
+            
+            .modal-next {
+                right: 15px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            #content {
+                padding: 20px;
+            }
+            h1 {
+                font-size: 1.8rem;
+            }
+            pre {
+                padding: 12px;
+                font-size: 0.85rem;
+            }
+            
+            .modal-nav {
+                width: 40px;
+                height: 40px;
+                font-size: 16px;
+            }
+            
+            .modal-prev {
+                left: 10px;
+            }
+            
+            .modal-next {
+                right: 10px;
+            }
+            
+            .modal-close {
+                top: 10px;
+                right: 15px;
+                font-size: 30px;
+            }
+            
+            #sidebar a {
+                padding: 10px 20px 10px 25px;
+            }
+            
+            #sidebar a:hover, #sidebar a.active {
+                padding-left: 30px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 左侧导航栏 -->
+    <div id="sidebar">
+        <h2 id="sidebar-title">网关问题目录</h2>
+        <ul>
+            <li><a href="#section1" class="active">ONVIF摄像头离线</a></li>
+            <li><a href="#section2">获取海康AKSK</a></li>
+            <li><a href="#section3">高校黑色设备操作</a></li>
+            <li><a href="#section4">清理Linux内存</a></li>
+            <li><a href="#section5">画面加载问题</a></li>
+            <li><a href="#section6">本地访问网页</a></li>
+            <li><a href="#section7">视频播放失败</a></li>
+            <li><a href="#section8">汇聚网页灰色</a></li>
+            <li><a href="#section9">摄像头同步问题</a></li>
+            <li><a href="#section10">XFTP传输问题</a></li>
+            <li><a href="#section11">黑色网关升级</a></li>
+            <li><a href="#section12">视频接入方式</a></li>
+            <li><a href="#section13">网关软件下载</a></li>
+            <li><a href="#section14">视频编码标准</a></li>
+            <li><a href="#section15">CentOS密码重置</a></li>
+            <li><a href="#section16">设备管理口控制</a></li>
+            <li><a href="#section17">国标接入离线</a></li>
+            <li><a href="#section18">CentOS路由处理</a></li>
+            <li><a href="#section19">网关进入BIOS</a></li>
+            <li><a href="#section20">国标接入配置</a></li>
+            <li><a href="#section21">网关升级说明</a></li>
+            <li><a href="#section22">IP通但显示离线</a></li>
+            <li><a href="#section23">网关序列号</a></li>
+            <li><a href="#section24">常用命令</a></li>
+        </ul>
+    </div>
+
+    <!-- 主内容区域 -->
+    <div id="content">
+        <h1>网关问题合集</h1>
+
+        <!-- 第一部分：ONVIF摄像头离线 -->
+        <div class="section" id="section1">
+            <h2>ONVIF摄像头离线</h2>
+            <p>高校网关通过ONVIF协议，IP直连方式接入摄像头，添加后显示离线？</p>
+            <p>首先摄像头要开启摄像机的ONVIF协议，其次检查IP（连通性）、端口、账号与密码。</p>
+            <div class="image-container">
+                <img src="./SPwg_img/doc_01_image.png" alt="ONVIF摄像头配置示意图" data-id="img1">
+            </div>
+        </div>
+
+        <!-- 第二部分：获取海康AKSK -->
+        <div class="section" id="section2">
+            <h2>获取海康AKSK</h2>
+            <p>从运管中心-状态监控-API网关-API管理-合作方管理获取。</p>
+            <p>开发前需要先获取对接的身份认证信息，AK/SK；平台会通过AK/SK认证方式来验证请求发送者的身份。</p>
+            <ol>
+                <li>进入运管中心（http://ip:8001/center），进入【状态监控】模块，选择【API网关】，选择【API管理】功能，进入API管理中心。</li>
+                <li>选择【合作方管理】，平台安装后，默认会创建一个对内合作方，可以使用此合作方进行接口调用测试，实际运行环境需要根据实际的情况创建新的合作方。</li>
+                <li>点击合作方的名称，进入合作方详情界面，获取合作方key（AK）和合作方Secret（SK）。</li>
+            </ol>
+            <div class="warning">
+                <p>注：海康要AKSK的，账号密码没用的。</p>
+            </div>
+            <div class="image-container">
+                <img src="./SPwg_img/doc_02_image.png" alt="海康AKSK获取示意图" data-id="img2">
+            </div>
+        </div>
+
+        <!-- 第三部分：高校黑色设备操作 -->
+        <div class="section" id="section3">
+            <h2>高校黑色设备操作</h2>
+            <p>在蓝奏云 <a href="https://talent666.lanzouy.com/b00wmaggbe" target="_blank">下载链接</a> 密码:1234 下载Xshell进行连接，使用命令行 <code>ssh user@192.168.1.100</code></p>
+        </div>
+
+        <!-- 第四部分：清理Linux内存 -->
+        <div class="section" id="section4">
+            <h2>清理Linux内存</h2>
+            <p>用户名和密码都是linaro</p>
+            <p>输入:</p>
+            <pre>sudo rm -rf /var/log/daemon.log && sudo rm -rf /var/log/syslog && sudo service rsyslog stop && sudo systemctl disable rsyslog</pre>
+            <p>然后</p>
+            <pre>sudo reboot</pre>
+        </div>
+
+        <!-- 第五部分：画面加载问题 -->
+        <div class="section" id="section5">
+            <h2>画面加载问题</h2>
+            <p>在网关上摄像头在线但是画面加载不出来？</p>
+            <p>使用同一网段IP进入汇聚网页。</p>
+        </div>
+
+        <!-- 第六部分：本地访问网页 -->
+        <div class="section" id="section6">
+            <h2>本地访问网页</h2>
+            <p>在网关设备上本地如何访问网页端？</p>
+            <p>可以通过127.0.0.1或者在网关本地上直接访问配置的两个网络。</p>
+            <div class="note">
+                <p>教育局设备需要加上端口号8089。</p>
+            </div>
+        </div>
+
+        <!-- 第七部分：视频播放失败 -->
+        <div class="section" id="section7">
+            <h2>视频播放失败</h2>
+            <p>网关本地显示在线但视频播放失败（提示连接服务器失败），网络正常测试链接正常，远程配置摄像头正常，摄像头采用IP直连方式接入。</p>
+            <div class="warning">
+                <p>原因：程序被360删掉了，装360的话需要把程序安装目录设为保护目录。</p>
+            </div>
+            <div class="image-container">
+                <img src="./SPwg_img/doc_03_image.png" alt="360保护目录设置图" data-id="img3">
+                <p class="image-desc">360保护目录设置图：显示360安全软件中添加程序目录到白名单/保护目录的界面</p>
+            </div>
+            <p>或者要卸载360。</p>
+        </div>
+
+        <!-- 第八部分：汇聚网页灰色 -->
+        <div class="section" id="section8">
+            <h2>汇聚网页灰色</h2>
+            <p>汇聚网页可以播放却显示灰色，在中台也无法播放。</p>
+            <p>原因：该IP有两个通道，要禁用这个不用的通道。</p>
+            <p>添加NVR两个通道，把不用的一个通道禁用掉。</p>
+            <blockquote>
+                <p><strong>设备在线但无画面</strong></p>
+                <p>检查编码格式（H.265需终端支持硬解）</p>
+                <p>验证子码流状态（主码流失效时切子码流）</p>
+            </blockquote>
+        </div>
+
+        <!-- 第九部分：摄像头同步问题 -->
+        <div class="section" id="section9">
+            <h2>摄像头同步问题</h2>
+            <p>在网关中汇聚平台上同步后摄像头仍没有？</p>
+            <p>在默认中根据摄像头名称搜索。</p>
+        </div>
+
+        <!-- 第十部分：XFTP传输问题 -->
+        <div class="section" id="section10">
+            <h2>XFTP传输问题</h2>
+            <p>XFTP无法传输文件，视频无法播放？</p>
+            <p>利用 <code>df -f</code>，<code>df -i</code> 查看Inode是否耗尽。</p>
+            <pre>rm -rf /usr/local/sppvcell/plugins/DVM_G10504/CrashReport</pre>
+        </div>
+
+        <!-- 第十一部分：黑色网关升级 -->
+        <div class="section" id="section11">
+            <h2>黑色网关升级</h2>
+            <p>黑色网关(Debian)服务器升级？</p>
+            <div class="image-container">
+                <img src="./SPwg_img/doc_04_image.png" alt="黑色网关升级示意图" data-id="img4">
+            </div>
+            <p>查看系统版本：</p>
+            <pre>cat /etc/os-release && uname -r</pre>
+            <p>切换root用户：</p>
+            <pre>sudo su root</pre>
+            <p>提升可执行权限：</p>
+            <pre>chmod +x install_gateway.sh</pre>
+            <p>执行当前目录下名为 install_gateway.sh 的脚本文件：</p>
+            <pre>./install_gateway.sh</pre>
+            <div class="note">
+                <p>（注意：无空格）</p>
+            </div>
+            <div class="image-container">
+                <img src="./SPwg_img/doc_05_image.png" alt="安装脚本执行示意图" data-id="img5">
+            </div>
+            <p>升级完成后：</p>
+            <p>账号: admin</p>
+            <p>初始密码: 123456</p>
+            <p>修改成: SPwg@a1b2c3!</p>
+        </div>
+
+        <!-- 第十二部分：视频接入方式 -->
+        <div class="section" id="section12">
+            <h2>视频接入方式</h2>
+            <p>高校视频接入四种方式：</p>
+            
+            <h3>方式一: GB28181</h3>
+            <div class="image-container">
+                <img src="./SPwg_img/doc_06_image.png" alt="GB28181配置示意图" data-id="img6">
+                <img src="./SPwg_img/doc_07_image.png" alt="GB28181配置示意图2" data-id="img7">
+            </div>
+            
+            <h3>方式二: ONVIF</h3>
+            <div class="image-container">
+                <img src="./SPwg_img/doc_08_image.png" alt="ONVIF配置示意图" data-id="img8">
+            </div>
+            
+            <h3>方式三: RTSP</h3>
+            <p>通用格式：<code>rtsp://[用户名]:[密码]@[IP地址]:[端口]/[路径]</code></p>
+            
+            <p><strong>宇视（Uniview）：</strong></p>
+            <p>主码流：<code>rtsp://admin:admin@192.168.8.8:554/video1</code></p>
+            <p>辅码流：<code>rtsp://admin:admin@192.168.8.8:554/video2</code></p>
+            <div class="image-container">
+                <img src="./SPwg_img/doc_09_image.png" alt="宇视RTSP配置示意图" data-id="img9">
+            </div>
+            
+            <p><strong>海康威视（Hikvision）：</strong></p>
+            <p>主码流：<code>rtsp://username:password@IP:554/Streaming/Channels/101</code></p>
+            <p>主码流：<code>若双通道,rtsp://username:password@IP:554/Streaming/Channels/201</code></p>
+            <p>子码流：<code>rtsp://username:password@IP:554/Streaming/Channels/102</code></p>
+            
+            <p><strong>大华（Dahua）：</strong></p>
+            <p>主码流：<code>rtsp://username:password@IP:554/cam/realmonitor?channel=1&subtype=0</code></p>
+            <p>子码流：<code>rtsp://username:password@IP:554/cam/realmonitor?channel=1&subtype=1</code></p>
+            
+            <h3>方式四: 嵌入式</h3>
+            <div class="image-container">
+                <img src="./SPwg_img/doc_10_image.png" alt="嵌入式配置示意图" data-id="img10">
+                <img src="./SPwg_img/doc_11_image.png" alt="嵌入式配置示意图2" data-id="img11">
+            </div>
+        </div>
+
+        <!-- 第十三部分：网关软件下载 -->
+        <div class="section" id="section13">
+            <h2>网关软件下载</h2>
+            <p><a href="https://talent666.lanzouu.com/b00wmug0mj" target="_blank">蓝奏云网关软件下载</a> 密码:1234</p>
+            <p><a href="https://quanxiao.lanzouo.com/b0maxutte" target="_blank">蓝奏云网关软件下载</a> 密码:biyt</p>
+        </div>
+
+        <!-- 第十四部分：视频编码标准 -->
+        <div class="section" id="section14">
+            <h2>视频编码标准</h2>
+            <p>机器上默认看264，本地265需要转码。</p>
+            <blockquote>
+                <p><strong>H.264</strong>（2003年发布）：</p>
+                <p>全称 Advanced Video Coding (AVC)，当前最普及的标准。</p>
+                <p><strong>H.265</strong>（2013年发布）：</p>
+                <p>全称 High Efficiency Video Coding (HEVC)，H.264的升级版，效率提升显著。</p>
+            </blockquote>
+            <p>异常情况目前的解释：当摄像头只有主码流或者只有辅码流、频繁在线离线，还有就是在线情况拿不到视频流'三个情况会提示异常。</p>
+        </div>
+
+        <!-- 第十五部分：CentOS密码重置 -->
+        <div class="section" id="section15">
+            <h2>CentOS密码重置</h2>
+            <p>CentOS 7忘记开机密码？</p>
+            <div class="image-container">
+                <img src="./SPwg_img/doc_12_image.png" alt="CentOS密码重置示意图" data-id="img12">
+            </div>
+        </div>
+
+        <!-- 第十六部分：设备管理口控制 -->
+        <div class="section" id="section16">
+            <h2>(银色设备)设备管理口控制</h2>
+            <h3>管理口连接</h3>
+            <div class="image-container">
+                <img src="./SPwg_img/doc_13_image.png" alt="管理口连接示意图" data-id="img13">
+            </div>
+            
+            <h3>IP设置</h3>
+            <div class="image-container">
+                <img src="./SPwg_img/doc_14_image.png" alt="IP设置示意图" data-id="img14">
+            </div>
+            
+            <h3>浏览器输入连接</h3>
+            <div class="image-container">
+                <img src="./SPwg_img/doc_15_image.png" alt="浏览器连接示意图" data-id="img15">
+            </div>
+            
+            <h3>远程控制</h3>
+            <div class="image-container">
+                <img src="./SPwg_img/doc_16_image.png" alt="远程控制示意图" data-id="img16">
+            </div>
+        </div>
+
+        <!-- 第十七部分：国标接入离线 -->
+        <div class="section" id="section17">
+            <h2>国标接入离线</h2>
+            <ol>
+                <li>升级</li>
+                <li>重启</li>
+                <li>检查网络联通性</li>
+            </ol>
+            <div class="image-container">
+                <img src="./SPwg_img/doc_17_image.png" alt="国标接入离线示意图" data-id="img17">
+            </div>
+        </div>
+
+        <!-- 第十八部分：CentOS路由处理 -->
+        <div class="section" id="section18">
+            <h2>CentOS路由处理</h2>
+            <div class="image-container">
+                <img src="./SPwg_img/doc_18_image.png" alt="CentOS路由处理示意图" data-id="img18">
+            </div>
+        </div>
+
+        <!-- 第十九部分：网关进入BIOS -->
+        <div class="section" id="section19">
+            <h2>网关进入BIOS</h2>
+            <ol>
+                <li>重启按Del</li>
+                <li>设置U盘为启动项</li>
+            </ol>
+            <div class="image-container">
+                <img src="./SPwg_img/doc_19_image.png" alt="BIOS设置示意图" data-id="img19">
+            </div>
+            <p>3. U盘安装WePE_64_V2.3.exe</p>
+        </div>
+
+        <!-- 第二十部分：国标接入配置 -->
+        <div class="section" id="section20">
+            <h2>国标接入配置</h2>
+            <div class="image-container">
+                <img src="./SPwg_img/doc_20_image.png" alt="国标接入配置示意图" data-id="img20">
+                <img src="./SPwg_img/doc_21_image.png" alt="国标接入配置示意图2" data-id="img21">
+            </div>
+        </div>
+
+        <!-- 第二十一部分：网关升级说明 -->
+        <div class="section" id="section21">
+            <h2>网关升级说明</h2>
+            <p>两个升级包都要运行，平台包与设备包，只升级一个包，数据不兼容，同步通道有几十万条数据。</p>
+        </div>
+
+        <!-- 第二十二部分：IP通但显示离线 -->
+        <div class="section" id="section22">
+            <h2>IP通但显示离线</h2>
+            <p>对方IP能ping通，显示离线。</p>
+            <p>对方可能接口熔断了。(海康自身排查下)</p>
+            <div class="image-container">
+                <img src="./SPwg_img/doc_22_image.png" alt="IP通但显示离线示意图" data-id="img22">
+            </div>
+        </div>
+
+        <!-- 第二十三部分：网关序列号 -->
+        <div class="section" id="section23">
+            <h2>网关序列号</h2>
+            <p>序列号数据来源于database中，若两台序列号一样，则要修改数据库。</p>
+        </div>
+
+        <!-- 第二十四部分：常用命令 -->
+        <div class="section" id="section24">
+            <h2>常用命令</h2>
+            <h3>Linux命令</h3>
+            <pre># Debian/Ubuntu
+sudo apt install traceroute
+traceroute [ip]</pre>
+            <pre># 管理网卡配置参数
+sudo nmtui</pre>
+            
+            <h3>Windows命令</h3>
+            <pre># Dos命令
+net user 用户名 新密码</pre>
+        </div>
+    </div>
+
+    <!-- 返回顶部按钮 -->
+    <div class="back-to-top" id="backToTop">↑</div>
+
+    <!-- 图片放大模态框 -->
+    <div class="image-modal" id="imageModal">
+        <span class="modal-close" id="modalClose">&times;</span>
+        <button class="modal-nav modal-prev" id="modalPrev"><i class="fas fa-chevron-left"></i></button>
+        <button class="modal-nav modal-next" id="modalNext"><i class="fas fa-chevron-right"></i></button>
+        <img class="modal-content" id="modalImage" alt="放大图片">
+        <div class="modal-counter" id="modalCounter"></div>
+    </div>
+
+    <script>
+        // 平滑滚动功能
+        document.querySelectorAll('#sidebar a').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                
+                // 移除所有active类
+                document.querySelectorAll('#sidebar a').forEach(a => {
+                    a.classList.remove('active');
+                });
+                
+                // 添加active类到当前点击的链接
+                this.classList.add('active');
+                
+                window.scrollTo({
+                    top: targetElement.offsetTop - 20,
+                    behavior: 'smooth'
+                });
+            });
+        });
+        
+        // 点击目录标题返回顶部
+        document.getElementById('sidebar-title').addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+        
+        // 返回顶部按钮
+        const backToTopButton = document.getElementById('backToTop');
+        
+        window.addEventListener('scroll', () => {
+            if (window.pageYOffset > 300) {
+                backToTopButton.classList.add('show');
+            } else {
+                backToTopButton.classList.remove('show');
+            }
+        });
+        
+        backToTopButton.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+        
+        // 滚动时高亮当前section对应的目录项
+        window.addEventListener('scroll', () => {
+            const sections = document.querySelectorAll('.section');
+            const navLinks = document.querySelectorAll('#sidebar a');
+            
+            let currentSection = '';
+            
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (window.pageYOffset >= sectionTop - 100) {
+                    currentSection = section.getAttribute('id');
+                }
+            });
+            
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === `#${currentSection}`) {
+                    link.classList.add('active');
+                }
+            });
+        });
+
+        // 图片放大功能
+        const modal = document.getElementById('imageModal');
+        const modalImg = document.getElementById('modalImage');
+        const modalClose = document.getElementById('modalClose');
+        const modalPrev = document.getElementById('modalPrev');
+        const modalNext = document.getElementById('modalNext');
+        const modalCounter = document.getElementById('modalCounter');
+        
+        // 收集页面中所有图片
+        const allImages = Array.from(document.querySelectorAll('.image-container img'));
+        let currentImageIndex = 0;
+        
+        // 记录当前模态框中显示的图片位置
+        let currentModalImagePosition = 0;
+
+        // 为所有图片添加点击事件
+        allImages.forEach((img, index) => {
+            img.addEventListener('click', function() {
+                // 设置当前图片索引
+                currentImageIndex = index;
+                
+                // 显示模态框并设置图片
+                openModal();
+            });
+        });
+
+        // 打开模态框
+        function openModal() {
+            modal.classList.add('active');
+            updateModalImage();
+            
+            // 防止背景滚动
+            document.body.style.overflow = 'hidden';
+        }
+
+        // 更新模态框中的图片
+        function updateModalImage() {
+            const img = allImages[currentImageIndex];
+            modalImg.src = img.src;
+            modalImg.alt = img.alt;
+            modalCounter.textContent = `${currentImageIndex + 1} / ${allImages.length}`;
+            
+            // 更新当前模态框中图片的位置
+            const imgRect = img.getBoundingClientRect();
+            currentModalImagePosition = window.pageYOffset + imgRect.top - 100;
+        }
+
+        // 关闭模态框
+        function closeModal() {
+            modal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+            
+            // 回到当前模态框中图片的位置
+            window.scrollTo({
+                top: currentModalImagePosition,
+                behavior: 'smooth'
+            });
+        }
+
+        // 显示上一张图片
+        function showPrevImage() {
+            currentImageIndex = (currentImageIndex - 1 + allImages.length) % allImages.length;
+            updateModalImage();
+        }
+
+        // 显示下一张图片
+        function showNextImage() {
+            currentImageIndex = (currentImageIndex + 1) % allImages.length;
+            updateModalImage();
+        }
+
+        // 点击关闭按钮关闭模态框
+        modalClose.addEventListener('click', closeModal);
+
+        // 点击模态框背景关闭模态框
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) {
+                closeModal();
+            }
+        });
+
+        // 点击导航按钮切换图片
+        modalPrev.addEventListener('click', showPrevImage);
+        modalNext.addEventListener('click', showNextImage);
+
+        // 按ESC键关闭模态框
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && modal.classList.contains('active')) {
+                closeModal();
+            }
+            
+            // 左右箭头切换图片
+            if (modal.classList.contains('active')) {
+                if (e.key === 'ArrowLeft') {
+                    showPrevImage();
+                } else if (e.key === 'ArrowRight') {
+                    showNextImage();
+                }
+            }
+        });
+
+        // 添加触摸滑动支持
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        modal.addEventListener('touchstart', function(e) {
+            touchStartX = e.changedTouches[0].screenX;
+        });
+
+        modal.addEventListener('touchend', function(e) {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        });
+
+        function handleSwipe() {
+            const swipeThreshold = 50;
+            
+            if (touchEndX < touchStartX - swipeThreshold) {
+                // 向左滑动，显示下一张
+                showNextImage();
+            } else if (touchEndX > touchStartX + swipeThreshold) {
+                // 向右滑动，显示上一张
+                showPrevImage();
+            }
+        }
+    </script>
+</body>
+</html>
