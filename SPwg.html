@@ -179,20 +179,52 @@
             padding: 15px;
             border-radius: 8px;
             box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+            position: relative;
+            min-height: 200px; /* 为加载占位符预留空间 */
         }
         
         .image-container img {
             max-width: 100%;
             height: auto;
             border-radius: 5px;
-            transition: transform 0.3s, box-shadow 0.3s;
+            transition: transform 0.3s, box-shadow 0.3s, opacity 0.5s;
             box-shadow: 0 3px 10px rgba(0,0,0,0.1);
             cursor: pointer;
+            opacity: 0; /* 初始透明，加载完成后显示 */
+        }
+        
+        .image-container img.loaded {
+            opacity: 1;
         }
         
         .image-container img:hover {
             transform: scale(1.02);
             box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+        }
+        
+        /* 图片加载占位符 */
+        .image-placeholder {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+            border-radius: 8px;
+        }
+        
+        @keyframes loading {
+            0% {
+                background-position: 200% 0;
+            }
+            100% {
+                background-position: -200% 0;
+            }
         }
         
         .image-desc {
@@ -343,6 +375,12 @@
             border-radius: 8px;
             box-shadow: 0 5px 25px rgba(0, 0, 0, 0.5);
             transition: transform 0.3s;
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
+        
+        .modal-content.loaded {
+            opacity: 1;
         }
         
         .modal-nav {
@@ -528,7 +566,8 @@
             <p>高校网关通过ONVIF协议，IP直连方式接入摄像头，添加后显示离线？</p>
             <p>首先摄像头要开启摄像机的ONVIF协议，其次检查IP（连通性）、端口、账号与密码。</p>
             <div class="image-container">
-                <img src="./SPwg_img/doc_01_image.png" alt="ONVIF摄像头配置示意图" data-id="img1">
+                <div class="image-placeholder"></div>
+                <img src="./SPwg_img/doc_01_image.png" alt="ONVIF摄像头配置示意图" data-id="img1" loading="lazy">
             </div>
         </div>
 
@@ -546,7 +585,8 @@
                 <p>注：海康要AKSK的，账号密码没用的。</p>
             </div>
             <div class="image-container">
-                <img src="./SPwg_img/doc_02_image.png" alt="海康AKSK获取示意图" data-id="img2">
+                <div class="image-placeholder"></div>
+                <img src="./SPwg_img/doc_02_image.png" alt="海康AKSK获取示意图" data-id="img2" loading="lazy">
             </div>
         </div>
 
@@ -591,7 +631,8 @@
                 <p>原因：程序被360删掉了，装360的话需要把程序安装目录设为保护目录。</p>
             </div>
             <div class="image-container">
-                <img src="./SPwg_img/doc_03_image.png" alt="360保护目录设置图" data-id="img3">
+                <div class="image-placeholder"></div>
+                <img src="./SPwg_img/doc_03_image.png" alt="360保护目录设置图" data-id="img3" loading="lazy">
                 <p class="image-desc">360保护目录设置图：显示360安全软件中添加程序目录到白名单/保护目录的界面</p>
             </div>
             <p>或者要卸载360。</p>
@@ -630,7 +671,8 @@
             <h2>黑色网关升级</h2>
             <p>黑色网关(Debian)服务器升级？</p>
             <div class="image-container">
-                <img src="./SPwg_img/doc_04_image.png" alt="黑色网关升级示意图" data-id="img4">
+                <div class="image-placeholder"></div>
+                <img src="./SPwg_img/doc_04_image.png" alt="黑色网关升级示意图" data-id="img4" loading="lazy">
             </div>
             <p>查看系统版本：</p>
             <pre>cat /etc/os-release && uname -r</pre>
@@ -644,7 +686,8 @@
                 <p>（注意：无空格）</p>
             </div>
             <div class="image-container">
-                <img src="./SPwg_img/doc_05_image.png" alt="安装脚本执行示意图" data-id="img5">
+                <div class="image-placeholder"></div>
+                <img src="./SPwg_img/doc_05_image.png" alt="安装脚本执行示意图" data-id="img5" loading="lazy">
             </div>
             <p>升级完成后：</p>
             <p>账号: admin</p>
@@ -659,13 +702,16 @@
             
             <h3>方式一: GB28181</h3>
             <div class="image-container">
-                <img src="./SPwg_img/doc_06_image.png" alt="GB28181配置示意图" data-id="img6">
-                <img src="./SPwg_img/doc_07_image.png" alt="GB28181配置示意图2" data-id="img7">
+                <div class="image-placeholder"></div>
+                <img src="./SPwg_img/doc_06_image.png" alt="GB28181配置示意图" data-id="img6" loading="lazy">
+                <div class="image-placeholder"></div>
+                <img src="./SPwg_img/doc_07_image.png" alt="GB28181配置示意图2" data-id="img7" loading="lazy">
             </div>
             
             <h3>方式二: ONVIF</h3>
             <div class="image-container">
-                <img src="./SPwg_img/doc_08_image.png" alt="ONVIF配置示意图" data-id="img8">
+                <div class="image-placeholder"></div>
+                <img src="./SPwg_img/doc_08_image.png" alt="ONVIF配置示意图" data-id="img8" loading="lazy">
             </div>
             
             <h3>方式三: RTSP</h3>
@@ -675,7 +721,8 @@
             <p>主码流：<code>rtsp://admin:admin@192.168.8.8:554/video1</code></p>
             <p>辅码流：<code>rtsp://admin:admin@192.168.8.8:554/video2</code></p>
             <div class="image-container">
-                <img src="./SPwg_img/doc_09_image.png" alt="宇视RTSP配置示意图" data-id="img9">
+                <div class="image-placeholder"></div>
+                <img src="./SPwg_img/doc_09_image.png" alt="宇视RTSP配置示意图" data-id="img9" loading="lazy">
             </div>
             
             <p><strong>海康威视（Hikvision）：</strong></p>
@@ -689,8 +736,10 @@
             
             <h3>方式四: 嵌入式</h3>
             <div class="image-container">
-                <img src="./SPwg_img/doc_10_image.png" alt="嵌入式配置示意图" data-id="img10">
-                <img src="./SPwg_img/doc_11_image.png" alt="嵌入式配置示意图2" data-id="img11">
+                <div class="image-placeholder"></div>
+                <img src="./SPwg_img/doc_10_image.png" alt="嵌入式配置示意图" data-id="img10" loading="lazy">
+                <div class="image-placeholder"></div>
+                <img src="./SPwg_img/doc_11_image.png" alt="嵌入式配置示意图2" data-id="img11" loading="lazy">
             </div>
         </div>
 
@@ -719,7 +768,8 @@
             <h2>CentOS密码重置</h2>
             <p>CentOS 7忘记开机密码？</p>
             <div class="image-container">
-                <img src="./SPwg_img/doc_12_image.png" alt="CentOS密码重置示意图" data-id="img12">
+                <div class="image-placeholder"></div>
+                <img src="./SPwg_img/doc_12_image.png" alt="CentOS密码重置示意图" data-id="img12" loading="lazy">
             </div>
         </div>
 
@@ -728,22 +778,26 @@
             <h2>(银色设备)设备管理口控制</h2>
             <h3>管理口连接</h3>
             <div class="image-container">
-                <img src="./SPwg_img/doc_13_image.png" alt="管理口连接示意图" data-id="img13">
+                <div class="image-placeholder"></div>
+                <img src="./SPwg_img/doc_13_image.png" alt="管理口连接示意图" data-id="img13" loading="lazy">
             </div>
             
             <h3>IP设置</h3>
             <div class="image-container">
-                <img src="./SPwg_img/doc_14_image.png" alt="IP设置示意图" data-id="img14">
+                <div class="image-placeholder"></div>
+                <img src="./SPwg_img/doc_14_image.png" alt="IP设置示意图" data-id="img14" loading="lazy">
             </div>
             
             <h3>浏览器输入连接</h3>
             <div class="image-container">
-                <img src="./SPwg_img/doc_15_image.png" alt="浏览器连接示意图" data-id="img15">
+                <div class="image-placeholder"></div>
+                <img src="./SPwg_img/doc_15_image.png" alt="浏览器连接示意图" data-id="img15" loading="lazy">
             </div>
             
             <h3>远程控制</h3>
             <div class="image-container">
-                <img src="./SPwg_img/doc_16_image.png" alt="远程控制示意图" data-id="img16">
+                <div class="image-placeholder"></div>
+                <img src="./SPwg_img/doc_16_image.png" alt="远程控制示意图" data-id="img16" loading="lazy">
             </div>
         </div>
 
@@ -756,7 +810,8 @@
                 <li>检查网络联通性</li>
             </ol>
             <div class="image-container">
-                <img src="./SPwg_img/doc_17_image.png" alt="国标接入离线示意图" data-id="img17">
+                <div class="image-placeholder"></div>
+                <img src="./SPwg_img/doc_17_image.png" alt="国标接入离线示意图" data-id="img17" loading="lazy">
             </div>
         </div>
 
@@ -764,7 +819,8 @@
         <div class="section" id="section18">
             <h2>CentOS路由处理</h2>
             <div class="image-container">
-                <img src="./SPwg_img/doc_18_image.png" alt="CentOS路由处理示意图" data-id="img18">
+                <div class="image-placeholder"></div>
+                <img src="./SPwg_img/doc_18_image.png" alt="CentOS路由处理示意图" data-id="img18" loading="lazy">
             </div>
         </div>
 
@@ -776,7 +832,8 @@
                 <li>设置U盘为启动项</li>
             </ol>
             <div class="image-container">
-                <img src="./SPwg_img/doc_19_image.png" alt="BIOS设置示意图" data-id="img19">
+                <div class="image-placeholder"></div>
+                <img src="./SPwg_img/doc_19_image.png" alt="BIOS设置示意图" data-id="img19" loading="lazy">
             </div>
             <p>3. U盘安装WePE_64_V2.3.exe</p>
         </div>
@@ -785,8 +842,10 @@
         <div class="section" id="section20">
             <h2>国标接入配置</h2>
             <div class="image-container">
-                <img src="./SPwg_img/doc_20_image.png" alt="国标接入配置示意图" data-id="img20">
-                <img src="./SPwg_img/doc_21_image.png" alt="国标接入配置示意图2" data-id="img21">
+                <div class="image-placeholder"></div>
+                <img src="./SPwg_img/doc_20_image.png" alt="国标接入配置示意图" data-id="img20" loading="lazy">
+                <div class="image-placeholder"></div>
+                <img src="./SPwg_img/doc_21_image.png" alt="国标接入配置示意图2" data-id="img21" loading="lazy">
             </div>
         </div>
 
@@ -800,9 +859,10 @@
         <div class="section" id="section22">
             <h2>IP通但显示离线</h2>
             <p>对方IP能ping通，显示离线。</p>
-            <p>对方可能接口熔断了。(海康自身排查下)</p>
+            <p>对方可能接口熔断了。</p>
             <div class="image-container">
-                <img src="./SPwg_img/doc_22_image.png" alt="IP通但显示离线示意图" data-id="img22">
+                <div class="image-placeholder"></div>
+                <img src="./SPwg_img/doc_22_image.png" alt="IP通但显示离线示意图" data-id="img22" loading="lazy">
             </div>
         </div>
 
@@ -912,6 +972,43 @@ net user 用户名 新密码</pre>
             });
         });
 
+        // 图片懒加载和预加载功能
+        const allImages = Array.from(document.querySelectorAll('.image-container img'));
+        
+        // 图片懒加载
+        const imageObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const img = entry.target;
+                    img.src = img.dataset.src || img.src;
+                    img.classList.add('loaded');
+                    
+                    // 图片加载完成后移除占位符
+                    img.onload = () => {
+                        const placeholder = img.previousElementSibling;
+                        if (placeholder && placeholder.classList.contains('image-placeholder')) {
+                            placeholder.style.display = 'none';
+                        }
+                    };
+                    
+                    observer.unobserve(img);
+                }
+            });
+        }, {
+            rootMargin: '50px 0px', // 提前50px开始加载
+            threshold: 0.1
+        });
+
+        // 初始化图片懒加载
+        allImages.forEach(img => {
+            // 保存原始src到data-src
+            if (!img.dataset.src) {
+                img.dataset.src = img.src;
+                img.src = ''; // 清空src，等待懒加载
+            }
+            imageObserver.observe(img);
+        });
+
         // 图片放大功能
         const modal = document.getElementById('imageModal');
         const modalImg = document.getElementById('modalImage');
@@ -920,8 +1017,6 @@ net user 用户名 新密码</pre>
         const modalNext = document.getElementById('modalNext');
         const modalCounter = document.getElementById('modalCounter');
         
-        // 收集页面中所有图片
-        const allImages = Array.from(document.querySelectorAll('.image-container img'));
         let currentImageIndex = 0;
         
         // 记录当前模态框中显示的图片位置
@@ -945,14 +1040,39 @@ net user 用户名 新密码</pre>
             
             // 防止背景滚动
             document.body.style.overflow = 'hidden';
+            
+            // 预加载相邻图片
+            preloadAdjacentImages();
+        }
+
+        // 预加载相邻图片
+        function preloadAdjacentImages() {
+            const prevIndex = (currentImageIndex - 1 + allImages.length) % allImages.length;
+            const nextIndex = (currentImageIndex + 1) % allImages.length;
+            
+            [prevIndex, nextIndex].forEach(index => {
+                const img = new Image();
+                img.src = allImages[index].dataset.src || allImages[index].src;
+            });
         }
 
         // 更新模态框中的图片
         function updateModalImage() {
             const img = allImages[currentImageIndex];
-            modalImg.src = img.src;
+            const imgSrc = img.dataset.src || img.src;
+            
+            // 重置模态框图片状态
+            modalImg.classList.remove('loaded');
+            
+            // 设置图片源
+            modalImg.src = imgSrc;
             modalImg.alt = img.alt;
             modalCounter.textContent = `${currentImageIndex + 1} / ${allImages.length}`;
+            
+            // 图片加载完成后显示
+            modalImg.onload = () => {
+                modalImg.classList.add('loaded');
+            };
             
             // 更新当前模态框中图片的位置
             const imgRect = img.getBoundingClientRect();
@@ -975,12 +1095,14 @@ net user 用户名 新密码</pre>
         function showPrevImage() {
             currentImageIndex = (currentImageIndex - 1 + allImages.length) % allImages.length;
             updateModalImage();
+            preloadAdjacentImages();
         }
 
         // 显示下一张图片
         function showNextImage() {
             currentImageIndex = (currentImageIndex + 1) % allImages.length;
             updateModalImage();
+            preloadAdjacentImages();
         }
 
         // 点击关闭按钮关闭模态框
