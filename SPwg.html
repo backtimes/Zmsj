@@ -53,29 +53,18 @@
         
         #sidebar ul {
             list-style-type: none;
-            counter-reset: section-counter;
         }
         
         #sidebar li {
             margin-bottom: 5px;
             position: relative;
-            counter-increment: section-counter;
-        }
-        
-        #sidebar li::before {
-            content: counter(section-counter) ". ";
-            color: #3498db;
-            font-weight: bold;
-            position: absolute;
-            left: 10px;
-            top: 12px;
         }
         
         #sidebar a {
             display: block;
             color: #ecf0f1;
             text-decoration: none;
-            padding: 12px 25px 12px 30px;
+            padding: 12px 25px 12px 25px;
             transition: all 0.3s;
             border-left: 3px solid transparent;
         }
@@ -84,7 +73,7 @@
             background-color: rgba(52, 73, 94, 0.7);
             color: #3498db;
             border-left: 3px solid #3498db;
-            padding-left: 35px;
+            padding-left: 30px;
         }
         
         /* 主内容区域 */
@@ -95,14 +84,12 @@
             background-color: white;
             min-height: 100vh;
             box-shadow: -5px 0 15px rgba(0, 0, 0, 0.05);
-            counter-reset: content-counter;
         }
         
         .section {
             margin-bottom: 50px;
             padding-bottom: 30px;
             border-bottom: 1px solid #eaeaea;
-            counter-increment: content-counter;
         }
         
         /* 标题样式 */
@@ -121,13 +108,6 @@
             padding-left: 15px;
             border-left: 4px solid #3498db;
             font-weight: 500;
-        }
-        
-        h2::before {
-            content: counter(content-counter) ". ";
-            color: #3498db;
-            font-weight: bold;
-            margin-right: 5px;
         }
         
         h3 {
@@ -180,17 +160,24 @@
             border-radius: 8px;
             box-shadow: 0 3px 10px rgba(0,0,0,0.08);
             position: relative;
-            min-height: 200px; /* 为加载占位符预留空间 */
+            min-height: 200px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
         }
         
         .image-container img {
             max-width: 100%;
+            max-height: 400px;
+            width: auto;
             height: auto;
             border-radius: 5px;
             transition: transform 0.3s, box-shadow 0.3s, opacity 0.5s;
             box-shadow: 0 3px 10px rgba(0,0,0,0.1);
             cursor: pointer;
-            opacity: 0; /* 初始透明，加载完成后显示 */
+            opacity: 0;
+            object-fit: contain;
         }
         
         .image-container img.loaded {
@@ -216,6 +203,7 @@
             background-size: 200% 100%;
             animation: loading 1.5s infinite;
             border-radius: 8px;
+            z-index: 1;
         }
         
         @keyframes loading {
@@ -230,11 +218,15 @@
         .image-desc {
             background-color: #f8f9fa;
             padding: 12px;
-            margin: 15px 0;
+            margin-top: 15px;
             border-radius: 5px;
             font-style: italic;
             color: #666;
             border-left: 3px solid #3498db;
+            width: 100%;
+            box-sizing: border-box;
+            z-index: 2;
+            position: relative;
         }
         
         /* 特殊样式块 */
@@ -515,11 +507,11 @@
             }
             
             #sidebar a {
-                padding: 10px 20px 10px 25px;
+                padding: 10px 20px 10px 20px;
             }
             
             #sidebar a:hover, #sidebar a.active {
-                padding-left: 30px;
+                padding-left: 25px;
             }
         }
     </style>
@@ -568,6 +560,7 @@
             <div class="image-container">
                 <div class="image-placeholder"></div>
                 <img src="./SPwg_img/doc_01_image.png" alt="ONVIF摄像头配置示意图" data-id="img1" loading="lazy">
+                <p class="image-desc">ONVIF摄像头配置示意图：显示摄像头ONVIF协议配置界面</p>
             </div>
         </div>
 
@@ -587,6 +580,7 @@
             <div class="image-container">
                 <div class="image-placeholder"></div>
                 <img src="./SPwg_img/doc_02_image.png" alt="海康AKSK获取示意图" data-id="img2" loading="lazy">
+                <p class="image-desc">海康AKSK获取示意图：显示API管理界面中获取AKSK的步骤</p>
             </div>
         </div>
 
@@ -673,6 +667,7 @@
             <div class="image-container">
                 <div class="image-placeholder"></div>
                 <img src="./SPwg_img/doc_04_image.png" alt="黑色网关升级示意图" data-id="img4" loading="lazy">
+                <p class="image-desc">黑色网关升级示意图：显示升级界面和步骤</p>
             </div>
             <p>查看系统版本：</p>
             <pre>cat /etc/os-release && uname -r</pre>
@@ -688,6 +683,7 @@
             <div class="image-container">
                 <div class="image-placeholder"></div>
                 <img src="./SPwg_img/doc_05_image.png" alt="安装脚本执行示意图" data-id="img5" loading="lazy">
+                <p class="image-desc">安装脚本执行示意图：显示脚本执行过程和结果</p>
             </div>
             <p>升级完成后：</p>
             <p>账号: admin</p>
@@ -704,14 +700,19 @@
             <div class="image-container">
                 <div class="image-placeholder"></div>
                 <img src="./SPwg_img/doc_06_image.png" alt="GB28181配置示意图" data-id="img6" loading="lazy">
+                <p class="image-desc">GB28181配置示意图：显示国标协议配置界面</p>
+            </div>
+            <div class="image-container">
                 <div class="image-placeholder"></div>
                 <img src="./SPwg_img/doc_07_image.png" alt="GB28181配置示意图2" data-id="img7" loading="lazy">
+                <p class="image-desc">GB28181配置示意图2：显示国标协议配置详情</p>
             </div>
             
             <h3>方式二: ONVIF</h3>
             <div class="image-container">
                 <div class="image-placeholder"></div>
                 <img src="./SPwg_img/doc_08_image.png" alt="ONVIF配置示意图" data-id="img8" loading="lazy">
+                <p class="image-desc">ONVIF配置示意图：显示ONVIF协议配置界面</p>
             </div>
             
             <h3>方式三: RTSP</h3>
@@ -723,6 +724,7 @@
             <div class="image-container">
                 <div class="image-placeholder"></div>
                 <img src="./SPwg_img/doc_09_image.png" alt="宇视RTSP配置示意图" data-id="img9" loading="lazy">
+                <p class="image-desc">宇视RTSP配置示意图：显示宇视摄像头RTSP配置界面</p>
             </div>
             
             <p><strong>海康威视（Hikvision）：</strong></p>
@@ -738,8 +740,12 @@
             <div class="image-container">
                 <div class="image-placeholder"></div>
                 <img src="./SPwg_img/doc_10_image.png" alt="嵌入式配置示意图" data-id="img10" loading="lazy">
+                <p class="image-desc">嵌入式配置示意图：显示嵌入式设备配置界面</p>
+            </div>
+            <div class="image-container">
                 <div class="image-placeholder"></div>
                 <img src="./SPwg_img/doc_11_image.png" alt="嵌入式配置示意图2" data-id="img11" loading="lazy">
+                <p class="image-desc">嵌入式配置示意图2：显示嵌入式设备配置详情</p>
             </div>
         </div>
 
@@ -770,6 +776,7 @@
             <div class="image-container">
                 <div class="image-placeholder"></div>
                 <img src="./SPwg_img/doc_12_image.png" alt="CentOS密码重置示意图" data-id="img12" loading="lazy">
+                <p class="image-desc">CentOS密码重置示意图：显示密码重置步骤</p>
             </div>
         </div>
 
@@ -780,24 +787,28 @@
             <div class="image-container">
                 <div class="image-placeholder"></div>
                 <img src="./SPwg_img/doc_13_image.png" alt="管理口连接示意图" data-id="img13" loading="lazy">
+                <p class="image-desc">管理口连接示意图：显示设备管理口连接方式</p>
             </div>
             
             <h3>IP设置</h3>
             <div class="image-container">
                 <div class="image-placeholder"></div>
                 <img src="./SPwg_img/doc_14_image.png" alt="IP设置示意图" data-id="img14" loading="lazy">
+                <p class="image-desc">IP设置示意图：显示网络IP配置界面</p>
             </div>
             
             <h3>浏览器输入连接</h3>
             <div class="image-container">
                 <div class="image-placeholder"></div>
                 <img src="./SPwg_img/doc_15_image.png" alt="浏览器连接示意图" data-id="img15" loading="lazy">
+                <p class="image-desc">浏览器连接示意图：显示浏览器访问界面</p>
             </div>
             
             <h3>远程控制</h3>
             <div class="image-container">
                 <div class="image-placeholder"></div>
                 <img src="./SPwg_img/doc_16_image.png" alt="远程控制示意图" data-id="img16" loading="lazy">
+                <p class="image-desc">远程控制示意图：显示远程控制界面</p>
             </div>
         </div>
 
@@ -812,6 +823,7 @@
             <div class="image-container">
                 <div class="image-placeholder"></div>
                 <img src="./SPwg_img/doc_17_image.png" alt="国标接入离线示意图" data-id="img17" loading="lazy">
+                <p class="image-desc">国标接入离线示意图：显示国标设备离线状态和排查方法</p>
             </div>
         </div>
 
@@ -821,6 +833,7 @@
             <div class="image-container">
                 <div class="image-placeholder"></div>
                 <img src="./SPwg_img/doc_18_image.png" alt="CentOS路由处理示意图" data-id="img18" loading="lazy">
+                <p class="image-desc">CentOS路由处理示意图：显示路由配置界面</p>
             </div>
         </div>
 
@@ -834,6 +847,7 @@
             <div class="image-container">
                 <div class="image-placeholder"></div>
                 <img src="./SPwg_img/doc_19_image.png" alt="BIOS设置示意图" data-id="img19" loading="lazy">
+                <p class="image-desc">BIOS设置示意图：显示BIOS界面和启动项设置</p>
             </div>
             <p>3. U盘安装WePE_64_V2.3.exe</p>
         </div>
@@ -844,8 +858,12 @@
             <div class="image-container">
                 <div class="image-placeholder"></div>
                 <img src="./SPwg_img/doc_20_image.png" alt="国标接入配置示意图" data-id="img20" loading="lazy">
+                <p class="image-desc">国标接入配置示意图：显示国标设备配置界面</p>
+            </div>
+            <div class="image-container">
                 <div class="image-placeholder"></div>
                 <img src="./SPwg_img/doc_21_image.png" alt="国标接入配置示意图2" data-id="img21" loading="lazy">
+                <p class="image-desc">国标接入配置示意图2：显示国标设备配置详情</p>
             </div>
         </div>
 
@@ -863,6 +881,7 @@
             <div class="image-container">
                 <div class="image-placeholder"></div>
                 <img src="./SPwg_img/doc_22_image.png" alt="IP通但显示离线示意图" data-id="img22" loading="lazy">
+                <p class="image-desc">IP通但显示离线示意图：显示设备在线状态和排查方法</p>
             </div>
         </div>
 
@@ -980,7 +999,13 @@ net user 用户名 新密码</pre>
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     const img = entry.target;
-                    img.src = img.dataset.src || img.src;
+                    const src = img.dataset.src || img.src;
+                    
+                    // 如果图片还没有加载
+                    if (img.src !== src) {
+                        img.src = src;
+                    }
+                    
                     img.classList.add('loaded');
                     
                     // 图片加载完成后移除占位符
@@ -991,11 +1016,20 @@ net user 用户名 新密码</pre>
                         }
                     };
                     
+                    // 如果图片加载失败，也移除占位符
+                    img.onerror = () => {
+                        const placeholder = img.previousElementSibling;
+                        if (placeholder && placeholder.classList.contains('image-placeholder')) {
+                            placeholder.style.display = 'none';
+                        }
+                        console.error(`图片加载失败: ${src}`);
+                    };
+                    
                     observer.unobserve(img);
                 }
             });
         }, {
-            rootMargin: '50px 0px', // 提前50px开始加载
+            rootMargin: '100px 0px', // 提前100px开始加载
             threshold: 0.1
         });
 
