@@ -1,12 +1,12 @@
+
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>网关问题合集 - 优化版</title>
+    <title>网关问题合集</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* 全局样式重置 */
         * {
             margin: 0;
             padding: 0;
@@ -14,7 +14,6 @@
             font-family: "Segoe UI", "Microsoft YaHei", sans-serif;
         }
         
-        /* 主体布局 */
         body {
             display: flex;
             background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
@@ -23,7 +22,6 @@
             min-height: 100vh;
         }
         
-        /* 侧边栏样式 */
         #sidebar {
             width: 280px;
             background: linear-gradient(180deg, #2c3e50 0%, #1a2530 100%);
@@ -87,7 +85,6 @@
             padding-left: 35px;
         }
         
-        /* 主内容区域 */
         #content {
             flex: 1;
             margin-left: 280px;
@@ -103,7 +100,6 @@
             border-bottom: 1px solid #eaeaea;
         }
         
-        /* 标题样式 */
         h1 {
             color: #2c3e50;
             margin-bottom: 30px;
@@ -119,6 +115,9 @@
             padding-left: 15px;
             border-left: 4px solid #3498db;
             font-weight: 500;
+            line-height: 1.4;
+            display: flex;
+            align-items: center;
         }
         
         h3 {
@@ -127,7 +126,24 @@
             font-weight: 500;
         }
         
-        /* 文本样式 */
+        .section-number {
+            display: inline-flex;
+            color: #3498db;
+            font-weight: bold;
+            margin-right: 10px;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            min-width: 30px;
+            height: 100%;
+        }
+        
+        /* 添加小数点样式 */
+        .section-number::after {
+            content: ".";
+            margin-left: 2px;
+        }
+        
         p {
             margin-bottom: 18px;
         }
@@ -162,7 +178,6 @@
             font-style: italic;
         }
         
-        /* 图片容器样式 */
         .image-container {
             margin: 20px 0;
             text-align: center;
@@ -176,6 +191,11 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
+            transition: all 0.3s ease;
+        }
+        
+        .image-container:hover {
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
         }
         
         .image-container img {
@@ -200,7 +220,6 @@
             box-shadow: 0 5px 15px rgba(0,0,0,0.15);
         }
         
-        /* 图片加载占位符 - 转圈圈效果 */
         .image-placeholder {
             position: absolute;
             top: 0;
@@ -233,14 +252,13 @@
             }
         }
         
-        /* 图片描述样式 - 调整字体颜色 */
         .image-desc {
             background-color: #f8f9fa;
             padding: 12px;
             margin-top: 15px;
             border-radius: 5px;
             font-style: italic;
-            color: #444; /* 调整为更深的灰色，提高可读性 */
+            color: #444;
             border-left: 3px solid #3498db;
             width: 100%;
             box-sizing: border-box;
@@ -249,7 +267,51 @@
             font-size: 0.95rem;
         }
         
-        /* 特殊样式块 */
+        .fallback-link {
+            background-color: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 5px;
+            padding: 12px;
+            margin-top: 10px;
+            font-size: 0.9rem;
+            color: #856404;
+            word-break: break-all;
+            display: none;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            width: 100%;
+        }
+        
+        .fallback-link a {
+            color: #0056b3;
+            text-decoration: underline;
+            font-weight: 500;
+            padding: 2px 5px;
+            border-radius: 3px;
+            transition: all 0.3s;
+        }
+        
+        .fallback-link a:hover {
+            color: #004085;
+            background-color: rgba(0,86,179,0.1);
+            text-decoration: none;
+        }
+        
+        .copy-link {
+            background-color: #6c757d;
+            color: white;
+            border: none;
+            padding: 4px 8px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            margin-left: 8px;
+            transition: background-color 0.3s;
+        }
+        
+        .copy-link:hover {
+            background-color: #545b62;
+        }
+        
         .highlight {
             background-color: #fffacd;
             padding: 3px 6px;
@@ -274,7 +336,6 @@
             color: #2d3436;
         }
         
-        /* 表格样式 */
         table {
             width: 100%;
             border-collapse: collapse;
@@ -307,7 +368,6 @@
             background-color: #f1f8ff;
         }
         
-        /* 链接样式 */
         a {
             color: #3498db;
             text-decoration: none;
@@ -319,7 +379,6 @@
             text-decoration: underline;
         }
         
-        /* 列表样式 */
         ol, ul {
             margin-left: 25px;
             margin-bottom: 20px;
@@ -329,7 +388,6 @@
             margin-bottom: 8px;
         }
         
-        /* 返回顶部按钮 */
         .back-to-top {
             position: fixed;
             bottom: 30px;
@@ -360,7 +418,6 @@
             transform: translateY(-3px);
         }
         
-        /* 图片放大模态框 */
         .image-modal {
             display: none;
             position: fixed;
@@ -453,7 +510,28 @@
             z-index: 1001;
         }
         
-        /* 响应式设计 */
+        .image-optimization {
+            margin: 20px 0;
+            padding: 15px;
+            background-color: #e8f4fc;
+            border-radius: 8px;
+            border-left: 4px solid #3498db;
+        }
+        
+        .compressed-img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 5px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+        
+        .image-info {
+            font-size: 0.9rem;
+            color: #666;
+            margin-top: 10px;
+            text-align: center;
+        }
+        
         @media (max-width: 1024px) {
             #sidebar {
                 width: 240px;
@@ -491,6 +569,10 @@
             
             .modal-next {
                 right: 15px;
+            }
+            
+            h2 {
+                flex-wrap: wrap;
             }
         }
         
@@ -533,29 +615,11 @@
             #sidebar a:hover, #sidebar a.active {
                 padding-left: 30px;
             }
-        }
-
-        /* 图片压缩和优化相关样式 */
-        .image-optimization {
-            margin: 20px 0;
-            padding: 15px;
-            background-color: #e8f4fc;
-            border-radius: 8px;
-            border-left: 4px solid #3498db;
-        }
-        
-        .compressed-img {
-            max-width: 100%;
-            height: auto;
-            border-radius: 5px;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
-        }
-        
-        .image-info {
-            font-size: 0.9rem;
-            color: #666;
-            margin-top: 10px;
-            text-align: center;
+            
+            .section-number {
+                min-width: 25px;
+                font-size: 1rem;
+            }
         }
     </style>
 </head>
@@ -593,17 +657,11 @@
 
     <!-- 主内容区域 -->
     <div id="content">
-        <h1>网关问题合集 - 优化版</h1>
+        <h1>网关问题合集</h1>
         
-        <div class="image-optimization">
-            <h3>页面优化说明</h3>
-            <p>本页面已优化图片加载，使用备用路径确保图片正常显示，并采用压缩技术提高加载速度。</p>
-            <p>如果本地图片无法加载，将自动切换到GitHub备用路径。</p>
-        </div>
-
         <!-- 第一部分：ONVIF摄像头离线 -->
         <div class="section" id="section1">
-            <h2>ONVIF摄像头离线</h2>
+            <h2><span class="section-number">1</span>ONVIF摄像头离线</h2>
             <p>高校网关通过ONVIF协议，IP直连方式接入摄像头，添加后显示离线？</p>
             <p>首先摄像头要开启摄像机的ONVIF协议，其次检查IP（连通性）、端口、账号与密码。</p>
             <div class="image-container">
@@ -611,13 +669,14 @@
                     <div class="spinner"></div>
                 </div>
                 <img src="./SPwg_img/doc_01_image.png" alt="ONVIF摄像头配置示意图" data-id="img1" data-fallback="https://backtimes.github.io/Zmsj/SPwg_img/doc_01_image.png">
+                <div class="fallback-link"></div>
                 <p class="image-desc">ONVIF摄像头配置示意图：显示摄像头ONVIF协议配置界面</p>
             </div>
         </div>
 
         <!-- 第二部分：获取海康AKSK -->
         <div class="section" id="section2">
-            <h2>获取海康AKSK</h2>
+            <h2><span class="section-number">2</span>获取海康AKSK</h2>
             <p>从运管中心-状态监控-API网关-API管理-合作方管理获取。</p>
             <p>开发前需要先获取对接的身份认证信息，AK/SK；平台会通过AK/SK认证方式来验证请求发送者的身份。</p>
             <ol>
@@ -633,19 +692,20 @@
                     <div class="spinner"></div>
                 </div>
                 <img src="./SPwg_img/doc_02_image.png" alt="海康AKSK获取示意图" data-id="img2" data-fallback="https://backtimes.github.io/Zmsj/SPwg_img/doc_02_image.png">
+                <div class="fallback-link"></div>
                 <p class="image-desc">海康AKSK获取示意图：显示API管理界面中获取AKSK的步骤</p>
             </div>
         </div>
 
         <!-- 第三部分：高校黑色设备操作 -->
         <div class="section" id="section3">
-            <h2>高校黑色设备操作</h2>
+            <h2><span class="section-number">3</span>高校黑色设备操作</h2>
             <p>在蓝奏云 <a href="https://talent666.lanzouy.com/b00wmaggbe" target="_blank">下载链接</a> 密码:1234 下载Xshell进行连接，使用命令行 <code>ssh user@192.168.1.100</code></p>
         </div>
 
         <!-- 第四部分：清理Linux内存 -->
         <div class="section" id="section4">
-            <h2>清理Linux内存</h2>
+            <h2><span class="section-number">4</span>清理Linux内存</h2>
             <p>用户名和密码都是linaro</p>
             <p>输入:</p>
             <pre>sudo rm -rf /var/log/daemon.log && sudo rm -rf /var/log/syslog && sudo service rsyslog stop && sudo systemctl disable rsyslog</pre>
@@ -655,14 +715,14 @@
 
         <!-- 第五部分：画面加载问题 -->
         <div class="section" id="section5">
-            <h2>画面加载问题</h2>
+            <h2><span class="section-number">5</span>画面加载问题</h2>
             <p>在网关上摄像头在线但是画面加载不出来？</p>
             <p>使用同一网段IP进入汇聚网页。</p>
         </div>
 
         <!-- 第六部分：本地访问网页 -->
         <div class="section" id="section6">
-            <h2>本地访问网页</h2>
+            <h2><span class="section-number">6</span>本地访问网页</h2>
             <p>在网关设备上本地如何访问网页端？</p>
             <p>可以通过127.0.0.1或者在网关本地上直接访问配置的两个网络。</p>
             <div class="note">
@@ -672,7 +732,7 @@
 
         <!-- 第七部分：视频播放失败 -->
         <div class="section" id="section7">
-            <h2>视频播放失败</h2>
+            <h2><span class="section-number">7</span>视频播放失败</h2>
             <p>网关本地显示在线但视频播放失败（提示连接服务器失败），网络正常测试链接正常，远程配置摄像头正常，摄像头采用IP直连方式接入。</p>
             <div class="warning">
                 <p>原因：程序被360删掉了，装360的话需要把程序安装目录设为保护目录。</p>
@@ -682,6 +742,7 @@
                     <div class="spinner"></div>
                 </div>
                 <img src="./SPwg_img/doc_03_image.png" alt="360保护目录设置图" data-id="img3" data-fallback="https://backtimes.github.io/Zmsj/SPwg_img/doc_03_image.png">
+                <div class="fallback-link"></div>
                 <p class="image-desc">360保护目录设置图：显示360安全软件中添加程序目录到白名单/保护目录的界面</p>
             </div>
             <p>或者要卸载360。</p>
@@ -689,7 +750,7 @@
 
         <!-- 第八部分：汇聚网页灰色 -->
         <div class="section" id="section8">
-            <h2>汇聚网页灰色</h2>
+            <h2><span class="section-number">8</span>汇聚网页灰色</h2>
             <p>汇聚网页可以播放却显示灰色，在中台也无法播放。</p>
             <p>原因：该IP有两个通道，要禁用这个不用的通道。</p>
             <p>添加NVR两个通道，把不用的一个通道禁用掉。</p>
@@ -702,14 +763,14 @@
 
         <!-- 第九部分：摄像头同步问题 -->
         <div class="section" id="section9">
-            <h2>摄像头同步问题</h2>
+            <h2><span class="section-number">9</span>摄像头同步问题</h2>
             <p>在网关中汇聚平台上同步后摄像头仍没有？</p>
             <p>在默认中根据摄像头名称搜索。</p>
         </div>
 
         <!-- 第十部分：XFTP传输问题 -->
         <div class="section" id="section10">
-            <h2>XFTP传输问题</h2>
+            <h2><span class="section-number">10</span>XFTP传输问题</h2>
             <p>XFTP无法传输文件，视频无法播放？</p>
             <p>利用 <code>df -f</code>，<code>df -i</code> 查看Inode是否耗尽。</p>
             <pre>rm -rf /usr/local/sppvcell/plugins/DVM_G10504/CrashReport</pre>
@@ -717,13 +778,14 @@
 
         <!-- 第十一部分：黑色网关升级 -->
         <div class="section" id="section11">
-            <h2>黑色网关升级</h2>
+            <h2><span class="section-number">11</span>黑色网关升级</h2>
             <p>黑色网关(Debian)服务器升级？</p>
             <div class="image-container">
                 <div class="image-placeholder">
                     <div class="spinner"></div>
                 </div>
                 <img src="./SPwg_img/doc_04_image.png" alt="黑色网关升级示意图" data-id="img4" data-fallback="https://backtimes.github.io/Zmsj/SPwg_img/doc_04_image.png">
+                <div class="fallback-link"></div>
                 <p class="image-desc">黑色网关升级示意图：显示升级界面和步骤</p>
             </div>
             <p>查看系统版本：</p>
@@ -742,6 +804,7 @@
                     <div class="spinner"></div>
                 </div>
                 <img src="./SPwg_img/doc_05_image.png" alt="安装脚本执行示意图" data-id="img5" data-fallback="https://backtimes.github.io/Zmsj/SPwg_img/doc_05_image.png">
+                <div class="fallback-link"></div>
                 <p class="image-desc">安装脚本执行示意图：显示脚本执行过程和结果</p>
             </div>
             <p>升级完成后：</p>
@@ -752,7 +815,7 @@
 
         <!-- 第十二部分：视频接入方式 -->
         <div class="section" id="section12">
-            <h2>视频接入方式</h2>
+            <h2><span class="section-number">12</span>视频接入方式</h2>
             <p>高校视频接入四种方式：</p>
             
             <h3>方式一: GB28181</h3>
@@ -761,6 +824,7 @@
                     <div class="spinner"></div>
                 </div>
                 <img src="./SPwg_img/doc_06_image.png" alt="GB28181配置示意图" data-id="img6" data-fallback="https://backtimes.github.io/Zmsj/SPwg_img/doc_06_image.png">
+                <div class="fallback-link"></div>
                 <p class="image-desc">GB28181配置示意图：显示国标协议配置界面</p>
             </div>
             <div class="image-container">
@@ -768,6 +832,7 @@
                     <div class="spinner"></div>
                 </div>
                 <img src="./SPwg_img/doc_07_image.png" alt="GB28181配置示意图2" data-id="img7" data-fallback="https://backtimes.github.io/Zmsj/SPwg_img/doc_07_image.png">
+                <div class="fallback-link"></div>
                 <p class="image-desc">GB28181配置示意图2：显示国标协议配置详情</p>
             </div>
             
@@ -777,6 +842,7 @@
                     <div class="spinner"></div>
                 </div>
                 <img src="./SPwg_img/doc_08_image.png" alt="ONVIF配置示意图" data-id="img8" data-fallback="https://backtimes.github.io/Zmsj/SPwg_img/doc_08_image.png">
+                <div class="fallback-link"></div>
                 <p class="image-desc">ONVIF配置示意图：显示ONVIF协议配置界面</p>
             </div>
             
@@ -791,6 +857,7 @@
                     <div class="spinner"></div>
                 </div>
                 <img src="./SPwg_img/doc_09_image.png" alt="宇视RTSP配置示意图" data-id="img9" data-fallback="https://backtimes.github.io/Zmsj/SPwg_img/doc_09_image.png">
+                <div class="fallback-link"></div>
                 <p class="image-desc">宇视RTSP配置示意图：显示宇视摄像头RTSP配置界面</p>
             </div>
             
@@ -809,6 +876,7 @@
                     <div class="spinner"></div>
                 </div>
                 <img src="./SPwg_img/doc_10_image.png" alt="嵌入式配置示意图" data-id="img10" data-fallback="https://backtimes.github.io/Zmsj/SPwg_img/doc_10_image.png">
+                <div class="fallback-link"></div>
                 <p class="image-desc">嵌入式配置示意图：显示嵌入式设备配置界面</p>
             </div>
             <div class="image-container">
@@ -816,20 +884,21 @@
                     <div class="spinner"></div>
                 </div>
                 <img src="./SPwg_img/doc_11_image.png" alt="嵌入式配置示意图2" data-id="img11" data-fallback="https://backtimes.github.io/Zmsj/SPwg_img/doc_11_image.png">
+                <div class="fallback-link"></div>
                 <p class="image-desc">嵌入式配置示意图2：显示嵌入式设备配置详情</p>
             </div>
         </div>
 
         <!-- 第十三部分：网关软件下载 -->
         <div class="section" id="section13">
-            <h2>网关软件下载</h2>
+            <h2><span class="section-number">13</span>网关软件下载</h2>
             <p><a href="https://talent666.lanzouu.com/b00wmug0mj" target="_blank">蓝奏云网关软件下载</a> 密码:1234</p>
             <p><a href="https://quanxiao.lanzouo.com/b0maxutte" target="_blank">蓝奏云网关软件下载</a> 密码:biyt</p>
         </div>
 
         <!-- 第十四部分：视频编码标准 -->
         <div class="section" id="section14">
-            <h2>视频编码标准</h2>
+            <h2><span class="section-number">14</span>视频编码标准</h2>
             <p>机器上默认看264，本地265需要转码。</p>
             <blockquote>
                 <p><strong>H.264</strong>（2003年发布）：</p>
@@ -842,26 +911,28 @@
 
         <!-- 第十五部分：CentOS密码重置 -->
         <div class="section" id="section15">
-            <h2>CentOS密码重置</h2>
+            <h2><span class="section-number">15</span>CentOS密码重置</h2>
             <p>CentOS 7忘记开机密码？</p>
             <div class="image-container">
                 <div class="image-placeholder">
                     <div class="spinner"></div>
                 </div>
                 <img src="./SPwg_img/doc_12_image.png" alt="CentOS密码重置示意图" data-id="img12" data-fallback="https://backtimes.github.io/Zmsj/SPwg_img/doc_12_image.png">
+                <div class="fallback-link"></div>
                 <p class="image-desc">CentOS密码重置示意图：显示密码重置步骤</p>
             </div>
         </div>
 
         <!-- 第十六部分：设备管理口控制 -->
         <div class="section" id="section16">
-            <h2>(银色设备)设备管理口控制</h2>
+            <h2><span class="section-number">16</span>(银色设备)设备管理口控制</h2>
             <h3>管理口连接</h3>
             <div class="image-container">
                 <div class="image-placeholder">
                     <div class="spinner"></div>
                 </div>
                 <img src="./SPwg_img/doc_13_image.png" alt="管理口连接示意图" data-id="img13" data-fallback="https://backtimes.github.io/Zmsj/SPwg_img/doc_13_image.png">
+                <div class="fallback-link"></div>
                 <p class="image-desc">管理口连接示意图：显示设备管理口连接方式</p>
             </div>
             
@@ -871,6 +942,7 @@
                     <div class="spinner"></div>
                 </div>
                 <img src="./SPwg_img/doc_14_image.png" alt="IP设置示意图" data-id="img14" data-fallback="https://backtimes.github.io/Zmsj/SPwg_img/doc_14_image.png">
+                <div class="fallback-link"></div>
                 <p class="image-desc">IP设置示意图：显示网络IP配置界面</p>
             </div>
             
@@ -880,6 +952,7 @@
                     <div class="spinner"></div>
                 </div>
                 <img src="./SPwg_img/doc_15_image.png" alt="浏览器连接示意图" data-id="img15" data-fallback="https://backtimes.github.io/Zmsj/SPwg_img/doc_15_image.png">
+                <div class="fallback-link"></div>
                 <p class="image-desc">浏览器连接示意图：显示浏览器访问界面</p>
             </div>
             
@@ -889,13 +962,14 @@
                     <div class="spinner"></div>
                 </div>
                 <img src="./SPwg_img/doc_16_image.png" alt="远程控制示意图" data-id="img16" data-fallback="https://backtimes.github.io/Zmsj/SPwg_img/doc_16_image.png">
+                <div class="fallback-link"></div>
                 <p class="image-desc">远程控制示意图：显示远程控制界面</p>
             </div>
         </div>
 
         <!-- 第十七部分：国标接入离线 -->
         <div class="section" id="section17">
-            <h2>国标接入离线</h2>
+            <h2><span class="section-number">17</span>国标接入离线</h2>
             <ol>
                 <li>升级</li>
                 <li>重启</li>
@@ -906,25 +980,27 @@
                     <div class="spinner"></div>
                 </div>
                 <img src="./SPwg_img/doc_17_image.png" alt="国标接入离线示意图" data-id="img17" data-fallback="https://backtimes.github.io/Zmsj/SPwg_img/doc_17_image.png">
+                <div class="fallback-link"></div>
                 <p class="image-desc">国标接入离线示意图：显示国标设备离线状态和排查方法</p>
             </div>
         </div>
 
         <!-- 第十八部分：CentOS路由处理 -->
         <div class="section" id="section18">
-            <h2>CentOS路由处理</h2>
+            <h2><span class="section-number">18</span>CentOS路由处理</h2>
             <div class="image-container">
                 <div class="image-placeholder">
                     <div class="spinner"></div>
                 </div>
                 <img src="./SPwg_img/doc_18_image.png" alt="CentOS路由处理示意图" data-id="img18" data-fallback="https://backtimes.github.io/Zmsj/SPwg_img/doc_18_image.png">
+                <div class="fallback-link"></div>
                 <p class="image-desc">CentOS路由处理示意图：显示路由配置界面</p>
             </div>
         </div>
 
         <!-- 第十九部分：网关进入BIOS -->
         <div class="section" id="section19">
-            <h2>网关进入BIOS</h2>
+            <h2><span class="section-number">19</span>网关进入BIOS</h2>
             <ol>
                 <li>重启按Del</li>
                 <li>设置U盘为启动项</li>
@@ -934,6 +1010,7 @@
                     <div class="spinner"></div>
                 </div>
                 <img src="./SPwg_img/doc_19_image.png" alt="BIOS设置示意图" data-id="img19" data-fallback="https://backtimes.github.io/Zmsj/SPwg_img/doc_19_image.png">
+                <div class="fallback-link"></div>
                 <p class="image-desc">BIOS设置示意图：显示BIOS界面和启动项设置</p>
             </div>
             <p>3. U盘安装WePE_64_V2.3.exe</p>
@@ -941,12 +1018,13 @@
 
         <!-- 第二十部分：国标接入配置 -->
         <div class="section" id="section20">
-            <h2>国标接入配置</h2>
+            <h2><span class="section-number">20</span>国标接入配置</h2>
             <div class="image-container">
                 <div class="image-placeholder">
                     <div class="spinner"></div>
                 </div>
                 <img src="./SPwg_img/doc_20_image.png" alt="国标接入配置示意图" data-id="img20" data-fallback="https://backtimes.github.io/Zmsj/SPwg_img/doc_20_image.png">
+                <div class="fallback-link"></div>
                 <p class="image-desc">国标接入配置示意图：显示国标设备配置界面</p>
             </div>
             <div class="image-container">
@@ -954,19 +1032,20 @@
                     <div class="spinner"></div>
                 </div>
                 <img src="./SPwg_img/doc_21_image.png" alt="国标接入配置示意图2" data-id="img21" data-fallback="https://backtimes.github.io/Zmsj/SPwg_img/doc_21_image.png">
+                <div class="fallback-link"></div>
                 <p class="image-desc">国标接入配置示意图2：显示国标设备配置详情</p>
             </div>
         </div>
 
         <!-- 第二十一部分：网关升级说明 -->
         <div class="section" id="section21">
-            <h2>网关升级说明</h2>
+            <h2><span class="section-number">21</span>网关升级说明</h2>
             <p>两个升级包都要运行，平台包与设备包，只升级一个包，数据不兼容，同步通道有几十万条数据。</p>
         </div>
 
         <!-- 第二十二部分：IP通但显示离线 -->
         <div class="section" id="section22">
-            <h2>IP通但显示离线</h2>
+            <h2><span class="section-number">22</span>IP通但显示离线</h2>
             <p>对方IP能ping通，显示离线。</p>
             <p>对方可能接口熔断了。</p>
             <div class="image-container">
@@ -974,19 +1053,20 @@
                     <div class="spinner"></div>
                 </div>
                 <img src="./SPwg_img/doc_22_image.png" alt="IP通但显示离线示意图" data-id="img22" data-fallback="https://backtimes.github.io/Zmsj/SPwg_img/doc_22_image.png">
+                <div class="fallback-link"></div>
                 <p class="image-desc">IP通但显示离线示意图：显示设备在线状态和排查方法</p>
             </div>
         </div>
 
         <!-- 第二十三部分：网关序列号 -->
         <div class="section" id="section23">
-            <h2>网关序列号</h2>
+            <h2><span class="section-number">23</span>网关序列号</h2>
             <p>序列号数据来源于database中，若两台序列号一样，则要修改数据库。</p>
         </div>
 
         <!-- 第二十四部分：常用命令 -->
         <div class="section" id="section24">
-            <h2>常用命令</h2>
+            <h2><span class="section-number">24</span>常用命令</h2>
             <h3>Linux命令</h3>
             <pre># Debian/Ubuntu
 sudo apt install traceroute
@@ -1087,53 +1167,120 @@ net user 用户名 新密码</pre>
         // 图片加载优化
         const allImages = Array.from(document.querySelectorAll('.image-container img'));
         
-        // 图片加载函数，支持备用路径
+        // 图片加载函数，支持备用路径和超时机制
         function loadImage(img) {
+            const container = img.parentElement;
             const placeholder = img.previousElementSibling;
+            const fallbackLink = img.nextElementSibling;
+            const fallback = img.getAttribute('data-fallback');
+            
             if (placeholder && placeholder.classList.contains('image-placeholder')) {
                 placeholder.style.display = 'flex';
             }
             
             const src = img.getAttribute('src');
-            const fallback = img.getAttribute('data-fallback');
+            
+            // 设置超时机制
+            const timeout = setTimeout(() => {
+                // 3秒后如果图片还没有加载完成，显示备用链接
+                if (!img.complete || img.naturalHeight === 0) {
+                    showFallbackLink(container, fallbackLink, fallback, '图片加载超时');
+                }
+            }, 3000);
             
             // 创建新的Image对象来预加载
             const newImg = new Image();
             newImg.onload = () => {
+                clearTimeout(timeout);
                 // 图片加载完成后隐藏占位符
-                const placeholder = img.previousElementSibling;
                 if (placeholder && placeholder.classList.contains('image-placeholder')) {
                     placeholder.style.display = 'none';
                 }
                 img.classList.add('loaded');
+                // 图片加载成功也显示备用链接提示
+                setupContainerHoverForLoaded(container, fallbackLink, fallback);
             };
             
             newImg.onerror = () => {
-                // 如果主路径失败，尝试备用路径
-                if (fallback) {
-                    console.log(`主路径加载失败，尝试备用路径: ${fallback}`);
-                    img.src = fallback;
-                    // 重新加载图片
-                    const fallbackImg = new Image();
-                    fallbackImg.onload = () => {
-                        const placeholder = img.previousElementSibling;
-                        if (placeholder && placeholder.classList.contains('image-placeholder')) {
-                            placeholder.style.display = 'none';
-                        }
-                        img.classList.add('loaded');
-                    };
-                    fallbackImg.src = fallback;
-                } else {
-                    // 图片加载失败也隐藏占位符
-                    const placeholder = img.previousElementSibling;
-                    if (placeholder && placeholder.classList.contains('image-placeholder')) {
-                        placeholder.style.display = 'none';
-                    }
-                    console.error(`图片加载失败: ${src}`);
-                }
+                clearTimeout(timeout);
+                handleImageError(img, container, placeholder, fallbackLink, fallback, src);
             };
             
             newImg.src = src;
+        }
+        
+        // 显示备用链接
+        function showFallbackLink(container, fallbackLink, fallback, reason) {
+            if (fallbackLink && fallbackLink.classList.contains('fallback-link')) {
+                fallbackLink.innerHTML = `
+                    ${reason}: 
+                    <a href="${fallback}" target="_blank" class="direct-link" title="点击访问备用图片">${fallback}</a>
+                    <button class="copy-link" data-link="${fallback}" title="复制链接">📋 复制</button>
+                `;
+                fallbackLink.style.display = 'block';
+                
+                // 确保容器有足够空间显示备用链接
+                container.style.minHeight = '250px';
+            }
+        }
+        
+        // 处理图片加载错误
+        function handleImageError(img, container, placeholder, fallbackLink, fallback, src) {
+            // 如果主路径失败，尝试备用路径
+            if (fallback) {
+                console.log(`主路径加载失败，尝试备用路径: ${fallback}`);
+                img.src = fallback;
+                
+                // 重新设置超时
+                const fallbackTimeout = setTimeout(() => {
+                    if (!img.complete || img.naturalHeight === 0) {
+                        showFallbackLink(container, fallbackLink, fallback, '备用路径加载超时');
+                    }
+                }, 3000);
+                
+                // 重新加载图片
+                const fallbackImg = new Image();
+                fallbackImg.onload = () => {
+                    clearTimeout(fallbackTimeout);
+                    if (placeholder && placeholder.classList.contains('image-placeholder')) {
+                        placeholder.style.display = 'none';
+                    }
+                    img.classList.add('loaded');
+                    setupContainerHoverForLoaded(container, fallbackLink, fallback);
+                };
+                fallbackImg.onerror = () => {
+                    clearTimeout(fallbackTimeout);
+                    // 图片加载失败也隐藏占位符，显示备用链接
+                    if (placeholder && placeholder.classList.contains('image-placeholder')) {
+                        placeholder.style.display = 'none';
+                    }
+                    showFallbackLink(container, fallbackLink, fallback, '图片加载失败');
+                    console.error(`图片加载失败: ${src}`);
+                };
+                fallbackImg.src = fallback;
+            } else {
+                // 图片加载失败也隐藏占位符，显示备用链接
+                if (placeholder && placeholder.classList.contains('image-placeholder')) {
+                    placeholder.style.display = 'none';
+                }
+                showFallbackLink(container, fallbackLink, fallback, '图片加载失败');
+                console.error(`图片加载失败: ${src}`);
+            }
+        }
+        
+        // 为已加载的图片设置容器悬浮提示
+        function setupContainerHoverForLoaded(container, fallbackLink, fallback) {
+            container.addEventListener('mouseenter', function() {
+                if (fallback) {
+                    showFallbackLink(container, fallbackLink, fallback, 'url');
+                }
+            });
+            
+            container.addEventListener('mouseleave', function() {
+                if (fallbackLink && fallbackLink.classList.contains('fallback-link')) {
+                    fallbackLink.style.display = 'none';
+                }
+            });
         }
 
         // 立即加载所有图片
@@ -1145,6 +1292,68 @@ net user 用户名 新密码</pre>
 
         // 页面加载完成后立即加载所有图片
         window.addEventListener('load', loadAllImages);
+        
+        // 设置复制链接功能
+        function setupCopyLink() {
+            document.addEventListener('click', function(e) {
+                if (e.target.classList.contains('copy-link')) {
+                    const link = e.target.getAttribute('data-link');
+                    copyToClipboard(link);
+                    
+                    // 显示复制成功提示
+                    const originalText = e.target.innerHTML;
+                    e.target.innerHTML = '✓ 已复制!';
+                    e.target.style.backgroundColor = '#28a745';
+                    e.target.style.color = 'white';
+                    
+                    setTimeout(() => {
+                        e.target.innerHTML = originalText;
+                        e.target.style.backgroundColor = '';
+                        e.target.style.color = '';
+                    }, 2000);
+                    
+                    e.preventDefault();
+                }
+            });
+        }
+        
+        // 复制文本到剪贴板
+        function copyToClipboard(text) {
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            document.body.appendChild(textarea);
+            textarea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textarea);
+            
+            // 显示全局提示
+            showNotification('链接已复制到剪贴板');
+        }
+        
+        // 显示通知
+        function showNotification(message) {
+            const notification = document.createElement('div');
+            notification.textContent = message;
+            notification.style.position = 'fixed';
+            notification.style.bottom = '20px';
+            notification.style.left = '50%';
+            notification.style.transform = 'translateX(-50%)';
+            notification.style.backgroundColor = '#28a745';
+            notification.style.color = 'white';
+            notification.style.padding = '10px 20px';
+            notification.style.borderRadius = '5px';
+            notification.style.zIndex = '10000';
+            notification.style.boxShadow = '0 3px 10px rgba(0,0,0,0.2)';
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                document.body.removeChild(notification);
+            }, 3000);
+        }
+        
+        // 初始化复制链接功能
+        setupCopyLink();
 
         // 图片放大功能
         const modal = document.getElementById('imageModal');
@@ -1289,9 +1498,6 @@ net user 用户名 新密码</pre>
             }
         }
 
-        // 图片压缩优化
-        // 在实际应用中，您应该在服务器端压缩图片
-        // 这里我们只是添加了一个提示，说明图片已经过优化
         console.log('页面图片已优化，使用备用路径确保加载成功');
     </script>
 </body>
