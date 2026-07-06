@@ -1,0 +1,1314 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>网关问题合集</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+/* ========== Reset & Base ========== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; font-size: 16px; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Arial, sans-serif;
+  background: #f0f2f5;
+  color: #1d2129;
+  line-height: 1.75;
+  -webkit-font-smoothing: antialiased;
+}
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-thumb { background: #c1c1c1; border-radius: 3px; }
+::-webkit-scrollbar-track { background: transparent; }
+
+/* ========== Layout ========== */
+.app-wrapper { display: flex; min-height: 100vh; }
+
+/* ========== Sidebar ========== */
+.sidebar {
+  position: fixed; top: 0; left: 0; bottom: 0; width: 280px;
+  background: #fff; border-right: 1px solid #e5e6eb;
+  display: flex; flex-direction: column; z-index: 100;
+  transition: transform 0.3s ease;
+}
+.sidebar-header {
+  padding: 20px 16px 12px; border-bottom: 1px solid #e5e6eb;
+  flex-shrink: 0;
+}
+.sidebar-header h2 {
+  font-size: 18px; font-weight: 600; color: #1677ff;
+  display: flex; align-items: center; gap: 8px;
+}
+.sidebar-search {
+  padding: 12px 16px 8px; flex-shrink: 0;
+}
+.sidebar-search input {
+  width: 100%; padding: 8px 12px 8px 34px; border: 1px solid #e5e6eb;
+  border-radius: 6px; font-size: 13px; outline: none;
+  background: #f7f8fa url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%238c8c8c' viewBox='0 0 16 16'%3E%3Cpath d='M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85zm-5.242.656a5 5 0 1 1 0-10 5 5 0 0 1 0 10z'/%3E%3C/svg%3E") no-repeat 10px center;
+  transition: border-color 0.2s;
+}
+.sidebar-search input:focus { border-color: #1677ff; background-color: #fff; }
+.sidebar-nav {
+  flex: 1; overflow-y: auto; padding: 8px 0;
+}
+.sidebar-nav .toc-item {
+  display: block; padding: 6px 16px 6px 0; font-size: 13px;
+  color: #4e5969; text-decoration: none; cursor: pointer;
+  border-left: 3px solid transparent; transition: all 0.15s;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.sidebar-nav .toc-item:hover { color: #1677ff; background: #f2f7ff; }
+.sidebar-nav .toc-item.active {
+  color: #1677ff; border-left-color: #1677ff;
+  background: #f2f7ff; font-weight: 600;
+}
+.sidebar-nav .toc-level-1 { padding-left: 16px; font-weight: 600; font-size: 14px; margin-top: 4px; }
+.sidebar-nav .toc-level-2 { padding-left: 32px; }
+.sidebar-nav .toc-level-3 { padding-left: 48px; font-size: 12px; }
+.sidebar-nav .toc-hidden { display: none; }
+
+/* ========== Main Content ========== */
+.main-content {
+  margin-left: 280px; flex: 1; min-width: 0;
+}
+.content-inner {
+  max-width: 900px; margin: 0 auto; padding: 32px 40px 80px;
+}
+.page-title {
+  font-size: 28px; font-weight: 700; color: #1d2129;
+  margin-bottom: 8px; padding-bottom: 20px;
+  border-bottom: 2px solid #1677ff;
+}
+
+/* ========== Hamburger ========== */
+.hamburger {
+  display: none; position: fixed; top: 12px; left: 12px; z-index: 200;
+  width: 40px; height: 40px; border-radius: 8px; border: 1px solid #e5e6eb;
+  background: #fff; cursor: pointer; align-items: center; justify-content: center;
+  font-size: 18px; color: #4e5969; box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+.sidebar-overlay {
+  display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.35);
+  z-index: 90;
+}
+
+/* ========== Section Cards ========== */
+.doc-section {
+  background: #fff; border-radius: 8px; padding: 24px 28px;
+  margin-bottom: 20px; box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+}
+.doc-section h1 {
+  font-size: 22px; font-weight: 700; color: #1d2129;
+  margin-bottom: 16px; padding-bottom: 10px;
+  border-bottom: 1px solid #e5e6eb;
+}
+.doc-section h2 {
+  font-size: 18px; font-weight: 600; color: #1d2129;
+  margin: 20px 0 12px;
+}
+.doc-section h3 {
+  font-size: 16px; font-weight: 600; color: #4e5969;
+  margin: 16px 0 10px;
+}
+.doc-section h4 {
+  font-size: 14px; font-weight: 600; color: #86909c;
+  margin: 12px 0 8px;
+}
+.doc-section p { margin-bottom: 10px; color: #4e5969; }
+.doc-section ul, .doc-section ol {
+  margin: 8px 0 12px 20px; color: #4e5969;
+}
+.doc-section li { margin-bottom: 4px; }
+.doc-section strong { color: #1d2129; }
+
+/* ========== Code Blocks ========== */
+.code-block {
+  position: relative; background: #1e1e1e; border-radius: 6px;
+  margin: 10px 0 14px; overflow: hidden;
+}
+.code-block pre {
+  padding: 16px 20px; overflow-x: auto; margin: 0;
+}
+.code-block code {
+  font-family: "JetBrains Mono", "Fira Code", "Source Code Pro", Consolas, monospace;
+  font-size: 13px; line-height: 1.6; color: #d4d4d4;
+}
+.code-block .copy-btn {
+  position: absolute; top: 8px; right: 8px; padding: 4px 10px;
+  background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 4px; color: #ccc; font-size: 12px; cursor: pointer;
+  opacity: 0; transition: opacity 0.2s;
+}
+.code-block:hover .copy-btn { opacity: 1; }
+.code-block .copy-btn:hover { background: rgba(255,255,255,0.25); color: #fff; }
+
+/* ========== Tables ========== */
+.doc-table-wrapper { overflow-x: auto; margin: 10px 0 14px; }
+.doc-table {
+  width: 100%; border-collapse: collapse; font-size: 14px;
+  border: 1px solid #e5e6eb; border-radius: 6px; overflow: hidden;
+}
+.doc-table thead { background: #f2f7ff; }
+.doc-table th {
+  padding: 10px 14px; text-align: left; font-weight: 600;
+  color: #1d2129; border-bottom: 2px solid #e5e6eb; white-space: nowrap;
+}
+.doc-table td {
+  padding: 9px 14px; border-bottom: 1px solid #f2f3f5; color: #4e5969;
+}
+.doc-table tbody tr:hover { background: #fafbfc; }
+.doc-table tbody tr:last-child td { border-bottom: none; }
+
+/* ========== Images ========== */
+.img-container {
+  display: inline-block; margin: 10px 0 14px; cursor: pointer;
+  border-radius: 6px; overflow: hidden; border: 1px solid #e5e6eb;
+  transition: box-shadow 0.2s;
+}
+.img-container:hover { box-shadow: 0 4px 12px rgba(22,119,255,0.15); }
+.img-container img {
+  display: block; max-width: 100%; height: auto; max-height: 520px;
+  object-fit: contain;
+}
+
+/* ========== Lightbox ========== */
+.lightbox {
+  display: none; position: fixed; inset: 0; z-index: 1000;
+  background: rgba(0,0,0,0.7); align-items: center; justify-content: center;
+}
+.lightbox.show { display: flex; }
+.lightbox img {
+  max-width: 92vw; max-height: 90vh; object-fit: contain;
+  border-radius: 4px; box-shadow: 0 8px 40px rgba(0,0,0,0.5);
+}
+.lightbox-close {
+  position: absolute; top: 16px; right: 20px; width: 40px; height: 40px;
+  border-radius: 50%; background: rgba(255,255,255,0.15); border: none;
+  color: #fff; font-size: 20px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: background 0.2s;
+}
+.lightbox-close:hover { background: rgba(255,255,255,0.3); }
+
+/* ========== Info / Warning boxes ========== */
+.info-box {
+  padding: 12px 16px; border-radius: 6px; margin: 10px 0 14px;
+  font-size: 14px;
+}
+.info-box.info { background: #e8f4ff; border-left: 4px solid #1677ff; color: #1677ff; }
+.info-box.warn { background: #fff7e6; border-left: 4px solid #fa8c16; color: #d46b08; }
+.info-box.danger { background: #fff2f0; border-left: 4px solid #ff4d4f; color: #cf1322; }
+
+/* ========== Back to top ========== */
+.back-to-top {
+  position: fixed; bottom: 30px; right: 30px; width: 42px; height: 42px;
+  border-radius: 50%; background: #1677ff; border: none; color: #fff;
+  font-size: 18px; cursor: pointer; box-shadow: 0 4px 12px rgba(22,119,255,0.35);
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; transform: translateY(20px); transition: all 0.3s; z-index: 50;
+}
+.back-to-top.visible { opacity: 1; transform: translateY(0); }
+.back-to-top:hover { background: #4096ff; }
+
+/* ========== Responsive ========== */
+@media (max-width: 768px) {
+  .hamburger { display: flex; }
+  .sidebar { transform: translateX(-100%); }
+  .sidebar.open { transform: translateX(0); box-shadow: 4px 0 20px rgba(0,0,0,0.15); }
+  .sidebar-overlay.show { display: block; }
+  .main-content { margin-left: 0; }
+  .content-inner { padding: 20px 16px 60px; padding-top: 60px; }
+  .page-title { font-size: 22px; }
+  .doc-section { padding: 18px 16px; }
+  .doc-section h1 { font-size: 19px; }
+  .doc-section h2 { font-size: 16px; }
+}
+</style>
+</head>
+<body>
+
+<!-- Hamburger Button -->
+<button class="hamburger" id="hamburgerBtn" aria-label="菜单">
+  <i class="fas fa-bars"></i>
+</button>
+
+<!-- Sidebar Overlay -->
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+<!-- Sidebar -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-header">
+    <h2><i class="fas fa-book"></i> 网关问题合集</h2>
+  </div>
+  <div class="sidebar-search">
+    <input type="text" id="tocSearch" placeholder="搜索目录...">
+  </div>
+  <nav class="sidebar-nav" id="sidebarNav">
+    <!-- Auto-generated by JS -->
+  </nav>
+</aside>
+
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox">
+  <button class="lightbox-close" id="lightboxClose"><i class="fas fa-times"></i></button>
+  <img src="" alt="" id="lightboxImg">
+</div>
+
+<!-- Back to Top -->
+<button class="back-to-top" id="backToTop"><i class="fas fa-chevron-up"></i></button>
+
+<!-- Main Content -->
+<div class="app-wrapper">
+<main class="main-content">
+<div class="content-inner">
+
+<h1 class="page-title">网关问题合集</h1>
+
+<!-- ================================================================ -->
+<!-- Section 1 -->
+<!-- ================================================================ -->
+<div class="doc-section">
+<h1 id="s1">1. 首要</h1>
+<p>在进行任何网关维护或故障排查之前，首先确认以下首要事项：</p>
+<h2 id="s1-1">1.1 网关升级</h2>
+<p>升级网关前，请确认当前版本号，确保有可用的升级包。升级过程中请勿断电或断网，升级完成后需要验证服务是否正常启动。</p>
+<div class="info-box info">提示：升级前建议备份当前配置文件和重要数据。</div>
+
+<h2 id="s1-2">1.2 网关重启</h2>
+<p>重启网关前，请确保所有正在进行的关键任务已完成。重启命令因系统不同而异：</p>
+<div class="code-block">
+<button class="copy-btn" onclick="copyCode(this)">复制</button>
+<pre><code># Linux系统
+sudo reboot
+
+# Windows系统
+shutdown /r /t 0</code></pre>
+</div>
+</div>
+
+<!-- ================================================================ -->
+<!-- Section 2 -->
+<!-- ================================================================ -->
+<div class="doc-section">
+<h1 id="s2">2. 黑色设备(Debian)</h1>
+<p>黑色设备采用Debian Linux操作系统，主要用于视频网关服务部署。</p>
+
+<h2 id="s2-1">2.1 产品</h2>
+<p>黑色设备为标准视频网关硬件设备，搭载Debian Linux系统，预装视频网关服务软件。</p>
+
+<h2 id="s2-2">2.2 连接</h2>
+<p>使用XShell等SSH工具连接Linux设备。连接时需要设备的IP地址、用户名和密码。</p>
+<div class="img-container" onclick="openLightbox('WGwt_img/img_000.png')">
+  <img src="WGwt_img/img_000.png" alt="XShell连接Linux">
+</div>
+<div class="img-container" onclick="openLightbox('WGwt_img/img_001.jpeg')">
+  <img src="WGwt_img/img_001.jpeg" alt="连接示例">
+</div>
+
+<h2 id="s2-3">2.3 网页查看</h2>
+<p>通过浏览器访问设备的Web管理界面，可以查看设备状态、配置网络参数和管理服务。</p>
+<div class="info-box info">默认Web管理地址为设备的IP地址，端口通常为80或8080。</div>
+
+<h2 id="s2-4">2.4 U盘插入设备</h2>
+<p>将U盘插入设备的USB接口后，Debian系统通常会自动挂载。若未自动挂载，需手动执行挂载操作：</p>
+<div class="code-block">
+<button class="copy-btn" onclick="copyCode(this)">复制</button>
+<pre><code># 查看U盘设备
+fdisk -l
+
+# 创建挂载点并挂载
+sudo mkdir -p /mnt/usb
+sudo mount /dev/sdb1 /mnt/usb</code></pre>
+</div>
+
+<h2 id="s2-5">2.5 系统进入命令行</h2>
+<p>当设备连接了显示器和键盘时，可以直接进入命令行界面。若需要通过SSH远程连接，请使用XShell、Putty等工具。</p>
+
+<h2 id="s2-6">2.6 清理内存</h2>
+<p>当设备存储空间不足时，需要清理日志文件和临时文件以释放空间。</p>
+<p><strong>清理日志文件命令：</strong></p>
+<div class="code-block">
+<button class="copy-btn" onclick="copyCode(this)">复制</button>
+<pre><code>sudo rm -rf /var/log/daemon.log && sudo rm -rf /var/log/syslog && sudo service rsyslog stop && sudo systemctl disable rsyslog</code></pre>
+</div>
+<p>清理完成后重启设备：</p>
+<div class="code-block">
+<button class="copy-btn" onclick="copyCode(this)">复制</button>
+<pre><code>sudo reboot</code></pre>
+</div>
+
+<div class="info-box warn">如果挂载点已满，可以删除崩溃报告目录：</div>
+<div class="code-block">
+<button class="copy-btn" onclick="copyCode(this)">复制</button>
+<pre><code># 查看磁盘使用情况
+df -h
+df -i
+
+# 删除崩溃报告
+rm -rf /usr/local/sppvcell/plugins/DVM1G10504/CrashReport/</code></pre>
+</div>
+
+<div class="img-container" onclick="openLightbox('WGwt_img/img_002.jpeg')">
+  <img src="WGwt_img/img_002.jpeg" alt="清理内存">
+</div>
+<div class="img-container" onclick="openLightbox('WGwt_img/img_003.jpeg')">
+  <img src="WGwt_img/img_003.jpeg" alt="磁盘查看">
+</div>
+
+<h2 id="s2-7">2.7 黑色debian升级</h2>
+<p>升级Debian系统上的视频网关软件，需要使用升级包和安装脚本。</p>
+<div class="img-container" onclick="openLightbox('WGwt_img/img_004.jpeg')">
+  <img src="WGwt_img/img_004.jpeg" alt="升级步骤1">
+</div>
+<div class="img-container" onclick="openLightbox('WGwt_img/img_005.png')">
+  <img src="WGwt_img/img_005.png" alt="升级步骤2">
+</div>
+
+<p><strong>查看系统版本：</strong></p>
+<div class="code-block">
+<button class="copy-btn" onclick="copyCode(this)">复制</button>
+<pre><code>cat /etc/os-release</code></pre>
+</div>
+
+<p><strong>执行升级命令：</strong></p>
+<div class="code-block">
+<button class="copy-btn" onclick="copyCode(this)">复制</button>
+<pre><code>sudo su root
+chmod +x install_gateway.sh
+./install_gateway.sh</code></pre>
+</div>
+
+<div class="info-box warn">升级完成后，账号 <strong>admin</strong> 初始密码为 <strong>123456</strong>，请立即修改为 <strong>SPwg@a1b2c3!</strong></div>
+
+<h2 id="s2-8">2.8 组织树导入</h2>
+<p>通过Web管理界面导入组织树结构数据，用于管理摄像头资源的层级关系。</p>
+<div class="img-container" onclick="openLightbox('WGwt_img/img_006.png')">
+  <img src="WGwt_img/img_006.png" alt="组织树导入">
+</div>
+
+<h2 id="s2-9">2.9 网络配置</h2>
+<p>配置设备的网络参数，包括IP地址、子网掩码、网关、DNS等。确保设备能够正常访问上级平台和网络。</p>
+<div class="code-block">
+<button class="copy-btn" onclick="copyCode(this)">复制</button>
+<pre><code># 查看网络配置
+ip addr show
+ip route show
+
+# 编辑网络配置文件
+sudo nano /etc/network/interfaces</code></pre>
+</div>
+
+<h2 id="s2-10">2.10 存储空间分配</h2>
+<p>使用GParted工具对磁盘分区进行扩容操作，以获得更多的可用存储空间。</p>
+<div class="img-container" onclick="openLightbox('WGwt_img/img_007.png')">
+  <img src="WGwt_img/img_007.png" alt="GParted分区1">
+</div>
+<div class="img-container" onclick="openLightbox('WGwt_img/img_008.png')">
+  <img src="WGwt_img/img_008.png" alt="GParted分区2">
+</div>
+
+<p><strong>分区扩容步骤：</strong></p>
+<ol>
+<li>打开GParted工具</li>
+<li>选择需要扩容的分区</li>
+<li>调整分区大小</li>
+<li>应用所有操作</li>
+</ol>
+
+<p><strong>安装必要的系统组件：</strong></p>
+<div class="code-block">
+<button class="copy-btn" onclick="copyCode(this)">复制</button>
+<pre><code># 安装语言包和字体
+sudo dpkg -i locales_*.deb
+sudo dpkg -i fonts_*.deb
+
+# 配置中文环境
+sudo dpkg-reconfigure locales</code></pre>
+</div>
+
+<div class="img-container" onclick="openLightbox('WGwt_img/img_001.jpeg')">
+  <img src="WGwt_img/img_001.jpeg" alt="安装组件">
+</div>
+<div class="img-container" onclick="openLightbox('WGwt_img/img_051.png')">
+  <img src="WGwt_img/img_051.png" alt="字体安装">
+</div>
+
+<h2 id="s2-11">2.11 Debian系统文件</h2>
+<p>了解Debian系统中的关键目录结构和视频网关服务模块。</p>
+
+<h3>2.11.1 Linux目录结构</h3>
+<div class="doc-table-wrapper">
+<table class="doc-table">
+<thead><tr><th>目录</th><th>说明</th></tr></thead>
+<tbody>
+<tr><td>/bin</td><td>存放常用的基本命令，如ls、cp、mv等</td></tr>
+<tr><td>/boot</td><td>存放系统启动时需要的文件，包括内核和引导加载程序</td></tr>
+<tr><td>/dev</td><td>设备文件目录，Linux中一切皆文件</td></tr>
+<tr><td>/etc</td><td>系统配置文件目录</td></tr>
+<tr><td>/home</td><td>普通用户的家目录</td></tr>
+<tr><td>/lib</td><td>系统运行所需的库文件</td></tr>
+<tr><td>/media</td><td>可移动设备挂载点（如U盘）</td></tr>
+<tr><td>/mnt</td><td>临时挂载点</td></tr>
+<tr><td>/opt</td><td>第三方软件安装目录</td></tr>
+<tr><td>/proc</td><td>虚拟文件系统，存储进程和系统信息</td></tr>
+<tr><td>/root</td><td>root用户的家目录</td></tr>
+<tr><td>/run</td><td>运行时数据</td></tr>
+<tr><td>/sbin</td><td>系统管理命令，如fdisk、iptables</td></tr>
+<tr><td>/srv</td><td>服务数据目录</td></tr>
+<tr><td>/sys</td><td>虚拟文件系统，存储设备和驱动信息</td></tr>
+<tr><td>/tmp</td><td>临时文件目录</td></tr>
+<tr><td>/usr</td><td>用户程序和数据</td></tr>
+<tr><td>/var</td><td>可变数据文件，如日志、缓存</td></tr>
+<tr><td>/lost+found</td><td>文件系统恢复目录</td></tr>
+<tr><td>/snap</td><td>Snap包管理目录</td></tr>
+<tr><td>/usr/local</td><td>本地编译安装的软件</td></tr>
+<tr><td>/usr/share</td><td>共享数据文件</td></tr>
+</tbody>
+</table>
+</div>
+
+<h3>2.11.2 VideoSVR模块列表</h3>
+<div class="doc-table-wrapper">
+<table class="doc-table">
+<thead><tr><th>模块名称</th><th>说明</th></tr></thead>
+<tbody>
+<tr><td>DVM1G10504</td><td>视频网关核心服务模块</td></tr>
+<tr><td>NVRModule</td><td>NVR录像管理模块</td></tr>
+<tr><td>GBModule</td><td>国标GB28181对接模块</td></tr>
+<tr><td>ONVIFModule</td><td>ONVIF协议接入模块</td></tr>
+<tr><td>RTSPModule</td><td>RTSP协议接入模块</td></tr>
+<tr><td>TranscodeModule</td><td>转码模块</td></tr>
+<tr><td>RecordModule</td><td>录像存储模块</td></tr>
+<tr><td>StreamModule</td><td>流媒体分发模块</td></tr>
+<tr><td>AuthModule</td><td>认证鉴权模块</td></tr>
+<tr><td>ConfigModule</td><td>配置管理模块</td></tr>
+<tr><td>MonitorModule</td><td>监控模块</td></tr>
+<tr><td>AlarmModule</td><td>报警处理模块</td></tr>
+<tr><td>LogModule</td><td>日志管理模块</td></tr>
+<tr><td>UpdateModule</td><td>升级更新模块</td></tr>
+<tr><td>BackupModule</td><td>备份恢复模块</td></tr>
+<tr><td>APIGateway</td><td>API网关模块</td></tr>
+<tr><td>WebModule</td><td>Web管理界面模块</td></tr>
+<tr><td>DBModule</td><td>数据库管理模块</td></tr>
+</tbody>
+</table>
+</div>
+
+<h2 id="s2-12">2.12 大华国标对接(浙江金融职业技术学院)</h2>
+<p>大华国标对接配置流程，以浙江金融职业技术学院为例。</p>
+<div class="img-container" onclick="openLightbox('WGwt_img/img_009.png')">
+  <img src="WGwt_img/img_009.png" alt="大华国标对接">
+</div>
+
+<h3 id="s2-12-1">2.12.1 卓美接收 (国标推送)</h3>
+<p>配置国标推送参数：</p>
+<ul>
+<li><strong>上级域IP：</strong>由上级平台提供</li>
+<li><strong>上级域ID：</strong>34020000002000000001</li>
+<li><strong>SIP服务端口：</strong>9703</li>
+<li><strong>鉴权账户：</strong>33010164112008283513</li>
+<li><strong>SIP服务统一接入密码：</strong>123456</li>
+</ul>
+
+<h3 id="s2-12-2">2.12.2 国标编码</h3>
+<p>按照国标GB/T 28181标准编码规则，为每路摄像头分配20位编码。编码规则：中心编码(8位) + 行业编码(2位) + 类型编码(3位) + 网络标识(7位)。</p>
+
+<h3 id="s2-12-3">2.12.3 登录大华DH-AGS进行国标配置</h3>
+<div class="img-container" onclick="openLightbox('WGwt_img/img_011.png')">
+  <img src="WGwt_img/img_011.png" alt="DH-AGS配置1">
+</div>
+<div class="img-container" onclick="openLightbox('WGwt_img/img_012.png')">
+  <img src="WGwt_img/img_012.png" alt="DH-AGS配置2">
+</div>
+<div class="img-container" onclick="openLightbox('WGwt_img/img_013.png')">
+  <img src="WGwt_img/img_013.png" alt="DH-AGS配置3">
+</div>
+
+<h3 id="s2-12-4">2.12.4 登录大华运维管理中心要修改唯一标识码</h3>
+<p>在大华运维管理中心中修改设备的唯一标识码，确保与国标编码一致。</p>
+<div class="img-container" onclick="openLightbox('WGwt_img/img_014.png')">
+  <img src="WGwt_img/img_014.png" alt="修改唯一标识码">
+</div>
+
+<h3 id="s2-12-5">2.12.5 摄像头推送</h3>
+<p>将摄像头视频流通过国标协议推送到上级平台。</p>
+<div class="img-container" onclick="openLightbox('WGwt_img/img_015.png')">
+  <img src="WGwt_img/img_015.png" alt="摄像头推送">
+</div>
+</div>
+
+<!-- ================================================================ -->
+<!-- Section 3 -->
+<!-- ================================================================ -->
+<div class="doc-section">
+<h1 id="s3">3. 银色设备</h1>
+<p>银色设备可能是CentOS 7或Windows系统的视频网关设备。</p>
+
+<h2 id="s3-1">3.1 产品</h2>
+<p>银色设备为另一种规格的视频网关硬件设备，支持CentOS 7和Windows双系统。</p>
+
+<h2 id="s3-2">3.2 设备管理口远程控制</h2>
+<p>通过设备的管理口进行远程控制操作。</p>
+<div class="img-container" onclick="openLightbox('WGwt_img/img_016.png')">
+  <img src="WGwt_img/img_016.png" alt="设备管理口">
+</div>
+
+<h3 id="s3-2-1">3.2.1 管理口连接</h3>
+<p>使用网线将电脑与设备的管理口连接，管理口通常位于设备的后面板。</p>
+
+<h3 id="s3-2-2">3.2.2 IP设置</h3>
+<p>将电脑的网络设置为与设备管理口同一网段的IP地址。</p>
+<div class="img-container" onclick="openLightbox('WGwt_img/img_017.png')">
+  <img src="WGwt_img/img_017.png" alt="IP设置">
+</div>
+
+<h3 id="s3-2-3">3.2.3 浏览器输入连接</h3>
+<p>在浏览器中输入设备管理口的IP地址进行连接。</p>
+<div class="img-container" onclick="openLightbox('WGwt_img/img_018.png')">
+  <img src="WGwt_img/img_018.png" alt="浏览器连接">
+</div>
+
+<h3 id="s3-2-4">3.2.4 远程控制</h3>
+<p>通过Web界面进行设备的远程控制，包括电源管理、KVM控制等。</p>
+<div class="img-container" onclick="openLightbox('WGwt_img/img_019.png')">
+  <img src="WGwt_img/img_019.png" alt="远程控制">
+</div>
+
+<h2 id="s3-3">3.3 CentOS7系统</h2>
+
+<h3 id="s3-3-1">3.3.1 CentOS7忘记开机密码</h3>
+<p>如果忘记了CentOS 7的开机密码，可以通过以下步骤重置：</p>
+<ol>
+<li>重启设备，在GRUB引导界面按 <strong>e</strong> 进入编辑模式</li>
+<li>找到 <strong>linux16</strong> 行，将 <strong>ro</strong> 改为 <strong>rw init=/bin/sh</strong></li>
+<li>按 <strong>Ctrl+X</strong> 启动</li>
+<li>进入单用户模式后执行 <strong>passwd</strong> 修改密码</li>
+<li>执行 <strong>touch /.autorelabel</strong> (SELinux相关)</li>
+<li>执行 <strong>exec /sbin/init</strong> 或 <strong>reboot -f</strong> 重启</li>
+</ol>
+<div class="img-container" onclick="openLightbox('WGwt_img/img_023.png')">
+  <img src="WGwt_img/img_023.png" alt="CentOS7密码重置">
+</div>
+
+<h3 id="s3-3-2">3.3.2 路由处理</h3>
+<p>配置CentOS 7的路由规则，确保设备能够正确访问内外网络。</p>
+<div class="img-container" onclick="openLightbox('WGwt_img/img_021.png')">
+  <img src="WGwt_img/img_021.png" alt="路由处理">
+</div>
+<div class="code-block">
+<button class="copy-btn" onclick="copyCode(this)">复制</button>
+<pre><code># 查看路由表
+ip route show
+
+# 添加静态路由
+sudo ip route add 10.0.0.0/24 via 192.168.1.1
+
+# 永久添加路由（编辑配置文件）
+sudo vi /etc/sysconfig/network-scripts/route-eth0</code></pre>
+</div>
+
+<h3 id="s3-3-3">3.3.3 安装向日葵</h3>
+<p>在CentOS 7上安装向日葵远程控制软件，方便远程维护。</p>
+<div class="code-block">
+<button class="copy-btn" onclick="copyCode(this)">复制</button>
+<pre><code># 下载向日葵安装包
+wget https://sunlogin.oray.com/download/linux?id=2 -O sunlogin.rpm
+
+# 安装
+sudo rpm -ivh sunlogin.rpm
+
+# 启动服务
+sudo systemctl start sunloginclient
+sudo systemctl enable sunloginclient</code></pre>
+</div>
+
+<h2 id="s3-4">3.4 Windows系统</h2>
+
+<h3 id="s3-4-1">3.4.1 忘记密码</h3>
+<p>如果忘记了Windows系统的登录密码：</p>
+<ol>
+<li>重启设备，在开机时按 <strong>Del</strong> 进入BIOS设置</li>
+<li>将U盘设置为启动项</li>
+<li>在U盘中安装 <strong>WePE_64_V2.3.exe</strong> 微PE工具</li>
+<li>通过PE系统修改Windows密码</li>
+</ol>
+<div class="img-container" onclick="openLightbox('WGwt_img/img_023.png')">
+  <img src="WGwt_img/img_023.png" alt="忘记密码处理">
+</div>
+
+<h3 id="s3-4-2">3.4.2 升级</h3>
+<p>Windows系统升级需要运行两个升级包，两个都要执行。</p>
+<div class="info-box info">
+  升级包下载地址：<br>
+  链接1：<a href="https://talent666.lanzouu.com/b00wmug0mj" target="_blank">https://talent666.lanzouu.com/b00wmug0mj</a> 密码：<strong>1234</strong><br>
+  链接2：<a href="https://quanxiao.lanzouo.com/b0maxutte" target="_blank">https://quanxiao.lanzouo.com/b0maxutte</a> 密码：<strong>biyt</strong>
+</div>
+<div class="info-box warn">两个升级包都需要运行安装，顺序不限。</div>
+
+<h3 id="s3-4-3">3.4.3 守护服务(Tray)</h3>
+<p>Windows系统上的守护服务(Tray)负责监控视频网关服务的运行状态，并在服务异常退出时自动重启。</p>
+
+<h3 id="s3-4-4">3.4.4 文件位置</h3>
+<p>Windows系统下视频网关相关文件的默认安装路径。序列号数据来源于database中。</p>
+
+<h3 id="s3-4-5">3.4.5 网页访问</h3>
+<p>通过浏览器访问设备的Web管理界面：</p>
+<ul>
+<li>本地访问：<strong>127.0.0.1</strong></li>
+<li>教育局设备端口：<strong>8089</strong></li>
+</ul>
+
+<h3 id="s3-4-6">3.4.6 360处理</h3>
+<p>如果360安全卫士误杀了视频网关程序，需要将其加入白名单或恢复被删除的文件。</p>
+<div class="info-box danger">注意：程序被360删掉了，需要在360的隔离区恢复，并添加到信任列表。</div>
+<div class="img-container" onclick="openLightbox('WGwt_img/img_025.png')">
+  <img src="WGwt_img/img_025.png" alt="360处理">
+</div>
+
+<h3 id="s3-4-7">3.4.7 永久路由添加</h3>
+<p>在Windows系统中添加永久路由：</p>
+<div class="code-block">
+<button class="copy-btn" onclick="copyCode(this)">复制</button>
+<pre><code>route add -p &lt;目标网络&gt; mask &lt;子网掩码&gt; &lt;网关地址&gt;</code></pre>
+</div>
+<p>示例：</p>
+<div class="code-block">
+<button class="copy-btn" onclick="copyCode(this)">复制</button>
+<pre><code>route add -p 10.0.0.0 mask 255.255.255.0 192.168.1.1</code></pre>
+</div>
+
+<h3 id="s3-4-8">3.4.8 文件含义</h3>
+<p>了解Windows系统下视频网关各文件和目录的含义。</p>
+<div class="img-container" onclick="openLightbox('WGwt_img/img_026.png')">
+  <img src="WGwt_img/img_026.png" alt="文件含义1">
+</div>
+<div class="img-container" onclick="openLightbox('WGwt_img/img_027.png')">
+  <img src="WGwt_img/img_027.png" alt="文件含义2">
+</div>
+
+<h3 id="s3-4-9">3.4.9 网页(Nginx)</h3>
+<p>Windows系统使用Nginx作为Web服务器，提供Web管理界面。</p>
+<div class="img-container" onclick="openLightbox('WGwt_img/img_028.png')">
+  <img src="WGwt_img/img_028.png" alt="Nginx配置">
+</div>
+
+<h3 id="s3-4-10">3.4.10 国标接入(大华DSS)</h3>
+<p>Windows系统下配置大华DSS国标接入。</p>
+<div class="img-container" onclick="openLightbox('WGwt_img/img_029.png')">
+  <img src="WGwt_img/img_029.png" alt="国标接入配置1">
+</div>
+<div class="img-container" onclick="openLightbox('WGwt_img/img_030.png')">
+  <img src="WGwt_img/img_030.png" alt="国标接入配置2">
+</div>
+<div class="info-box info">修改 Config.ini 中的 <strong>RTPProtocol=1</strong> 参数。</div>
+
+<h2 id="s3-5">3.5 参数</h2>
+<p>银色设备的各项配置参数说明。</p>
+<div class="img-container" onclick="openLightbox('WGwt_img/img_031.png')">
+  <img src="WGwt_img/img_031.png" alt="参数配置">
+</div>
+</div>
+
+<!-- ================================================================ -->
+<!-- Section 4 -->
+<!-- ================================================================ -->
+<div class="doc-section">
+<h1 id="s4">4. 数据网关</h1>
+<p>数据网关是一种专门用于数据传输和协议转换的网关设备。</p>
+
+<h2 id="s4-1">4.1 产品</h2>
+<p>数据网关产品外观及接口说明。</p>
+<div class="img-container" onclick="openLightbox('WGwt_img/img_032.jpeg')">
+  <img src="WGwt_img/img_032.jpeg" alt="数据网关产品">
+</div>
+
+<h2 id="s4-2">4.2 数据网关配置</h2>
+
+<h3 id="s4-2-1">4.2.1 SSH 安装与配置</h3>
+<p>安装并配置SSH服务以进行远程管理。</p>
+<div class="code-block">
+<button class="copy-btn" onclick="copyCode(this)">复制</button>
+<pre><code># 安装SSH服务
+sudo apt install openssh-server
+
+# 重启SSH服务
+sudo systemctl restart sshd
+sudo systemctl enable sshd</code></pre>
+</div>
+<div class="info-box info">初始凭据：用户名 <strong>meichang/ubuntu</strong>，密码 <strong>hzx123456</strong></div>
+
+<h3 id="s4-2-2">4.2.2 密码修改</h3>
+<div class="code-block">
+<button class="copy-btn" onclick="copyCode(this)">复制</button>
+<pre><code>sudo passwd ubuntu
+sudo passwd meichang</code></pre>
+</div>
+
+<h3 id="s4-2-3">4.2.3 开启Root远程访问</h3>
+<p>修改SSH配置文件以允许Root用户远程登录。</p>
+<div class="code-block">
+<button class="copy-btn" onclick="copyCode(this)">复制</button>
+<pre><code># 编辑SSH配置文件
+sudo nano /etc/ssh/sshd_config
+
+# 修改以下参数
+PermitRootLogin yes
+PasswordAuthentication yes
+
+# 重启SSH服务
+sudo systemctl restart sshd</code></pre>
+</div>
+
+<h3 id="s4-2-4">4.2.4 用户账户修改</h3>
+<div class="code-block">
+<button class="copy-btn" onclick="copyCode(this)">复制</button>
+<pre><code># 终止用户进程
+pkill -u username
+
+# 修改用户信息
+sudo usermod -l newname oldname
+sudo usermod -d /home/newname -m newname
+
+# 修改用户组
+sudo groupmod -n newgroup oldgroup</code></pre>
+</div>
+
+<h3 id="s4-2-5">4.2.5 主机名修改</h3>
+<div class="code-block">
+<button class="copy-btn" onclick="copyCode(this)">复制</button>
+<pre><code># 临时修改
+sudo hostname new-hostname
+
+# 永久修改
+sudo nano /etc/hostname
+sudo nano /etc/hosts</code></pre>
+</div>
+
+<h2 id="s4-3">4.3 重新安装桌面</h2>
+
+<h3 id="s4-3-1">4.3.1 GNOME桌面无法恢复</h3>
+<p>当GNOME桌面无法恢复时，可以先卸载GNOME再安装XFCE桌面环境：</p>
+<div class="code-block">
+<button class="copy-btn" onclick="copyCode(this)">复制</button>
+<pre><code># 第一步：卸载GNOME桌面
+sudo apt-get remove --purge gnome-shell gnome-desktop3-data
+sudo apt-get autoremove --purge
+
+# 第二步：安装XFCE桌面
+sudo apt-get update
+sudo apt-get install xfce4 xfce4-goodies
+
+# 第三步：设置默认桌面环境
+echo "startxfce4" > ~/.xsession
+
+# 第四步：重启
+sudo reboot</code></pre>
+</div>
+<div class="info-box info">XFCE桌面环境更加轻量，适合低配置设备使用。</div>
+</div>
+
+<!-- ================================================================ -->
+<!-- Section 5 -->
+<!-- ================================================================ -->
+<div class="doc-section">
+<h1 id="s5">5. Linux常见桌面环境</h1>
+<p>Linux系统常见的桌面环境对比：</p>
+<div class="doc-table-wrapper">
+<table class="doc-table">
+<thead><tr><th>桌面环境</th><th>说明</th><th>特点</th></tr></thead>
+<tbody>
+<tr><td>GNOME</td><td>Ubuntu/Fedora默认桌面</td><td>简洁现代，操作直观</td></tr>
+<tr><td>XFCE</td><td>轻量级桌面环境</td><td>资源占用低，速度快</td></tr>
+<tr><td>KDE</td><td>功能丰富的桌面</td><td>高度可定制，类似Windows体验</td></tr>
+<tr><td>Unity</td><td>Ubuntu旧版默认桌面</td><td>Canonical开发，已停止维护</td></tr>
+<tr><td>MATE</td><td>GNOME 2的分支</td><td>传统桌面布局，经典操作方式</td></tr>
+<tr><td>Cinnamon</td><td>Linux Mint默认桌面</td><td>传统与现代结合，易于使用</td></tr>
+<tr><td>LXQt</td><td>轻量级Qt桌面</td><td>极低资源占用</td></tr>
+<tr><td>Deepin DDE</td><td>深度操作系统桌面</td><td>美观精致，本土化好</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<!-- ================================================================ -->
+<!-- Section 6 -->
+<!-- ================================================================ -->
+<div class="doc-section">
+<h1 id="s6">6. 摄像头</h1>
+<p>摄像头的配置、接入和管理。</p>
+
+<h2 id="s6-1">6.1 视频编码标准</h2>
+<p>常见的视频编码标准：</p>
+<ul>
+<li><strong>H.264/AVC：</strong>最广泛使用的视频编码标准，兼容性好，压缩率适中。大部分摄像头和播放设备都支持。</li>
+<li><strong>H.265/HEVC：</strong>新一代视频编码标准，在相同画质下比H.264节省约50%的带宽和存储空间。但兼容性相对较低，部分老旧设备可能不支持。</li>
+</ul>
+<div class="info-box info">建议在有兼容性要求时使用H.264编码，在带宽或存储有限时使用H.265编码。</div>
+
+<h2 id="s6-2">6.2 获取海康平台的AKSK</h2>
+<p>从海康运管中心获取Access Key(AK)和Secret Key(SK)。</p>
+<div class="img-container" onclick="openLightbox('WGwt_img/img_041.png')">
+  <img src="WGwt_img/img_041.png" alt="获取海康AKSK">
+</div>
+<p>获取步骤：</p>
+<ol>
+<li>登录海康运管中心</li>
+<li>进入开发者设置/密钥管理页面</li>
+<li>创建或查看AK/SK密钥对</li>
+<li>妥善保存密钥信息</li>
+</ol>
+
+<h2 id="s6-3">6.3 海康寻找IP</h2>
+<p>使用海康工具搜索局域网内海康摄像头的IP地址。</p>
+<div class="img-container" onclick="openLightbox('WGwt_img/img_042.png')">
+  <img src="WGwt_img/img_042.png" alt="海康寻找IP1">
+</div>
+<div class="img-container" onclick="openLightbox('WGwt_img/img_043.png')">
+  <img src="WGwt_img/img_043.png" alt="海康寻找IP2">
+</div>
+
+<h2 id="s6-4">6.4 视频接入四种方式</h2>
+<p>视频网关支持四种摄像头接入方式：</p>
+<div class="img-container" onclick="openLightbox('WGwt_img/img_044.png')">
+  <img src="WGwt_img/img_044.png" alt="视频接入方式1">
+</div>
+<div class="img-container" onclick="openLightbox('WGwt_img/img_045.png')">
+  <img src="WGwt_img/img_045.png" alt="视频接入方式2">
+</div>
+
+<h3 id="s6-4-1">6.4.1 方式一：GB28181</h3>
+<p>通过国标GB28181协议接入摄像头，适合大规模、跨平台的视频联网。</p>
+<div class="img-container" onclick="openLightbox('WGwt_img/img_046.png')">
+  <img src="WGwt_img/img_046.png" alt="GB28181配置1">
+</div>
+<div class="img-container" onclick="openLightbox('WGwt_img/img_047.png')">
+  <img src="WGwt_img/img_047.png" alt="GB28181配置2">
+</div>
+<ul>
+<li><strong>上级域IP：</strong>由上级平台提供</li>
+<li><strong>上级域ID：</strong>34020000002000000001</li>
+<li><strong>SIP服务端口：</strong>9703</li>
+</ul>
+
+<h3 id="s6-4-2">6.4.2 方式二：ONVIF</h3>
+<p>通过ONVIF协议接入摄像头，适用于支持ONVIF标准的大部分品牌摄像头。</p>
+<div class="img-container" onclick="openLightbox('WGwt_img/img_048.png')">
+  <img src="WGwt_img/img_048.png" alt="ONVIF配置1">
+</div>
+<div class="img-container" onclick="openLightbox('WGwt_img/img_049.png')">
+  <img src="WGwt_img/img_049.png" alt="ONVIF配置2">
+</div>
+<div class="img-container" onclick="openLightbox('WGwt_img/img_050.png')">
+  <img src="WGwt_img/img_050.png" alt="ONVIF配置3">
+</div>
+
+<h3 id="s6-4-3">6.4.3 方式三：RTSP</h3>
+<p>通过RTSP协议直接拉取摄像头的视频流。</p>
+<div class="img-container" onclick="openLightbox('WGwt_img/img_052.png')">
+  <img src="WGwt_img/img_052.png" alt="RTSP配置">
+</div>
+<p><strong>常见品牌RTSP地址格式：</strong></p>
+<div class="code-block">
+<button class="copy-btn" onclick="copyCode(this)">复制</button>
+<pre><code># 宇视(Uniview)
+rtsp://用户名:密码@IP地址/video1
+
+# 海康(Hikvision)
+rtsp://用户名:密码@IP地址/Streaming/Channels/101
+
+# 大华(Dahua)
+rtsp://用户名:密码@IP地址/cam/realmonitor?channel=1&amp;subtype=0</code></pre>
+</div>
+
+<h3 id="s6-4-4">6.4.4 方式四：嵌入式</h3>
+<p>嵌入式接入方式，将摄像头SDK嵌入到网关系统中。</p>
+<div class="img-container" onclick="openLightbox('WGwt_img/img_053.png')">
+  <img src="WGwt_img/img_053.png" alt="嵌入式配置1">
+</div>
+<div class="img-container" onclick="openLightbox('WGwt_img/img_054.png')">
+  <img src="WGwt_img/img_054.png" alt="嵌入式配置2">
+</div>
+
+<h2 id="s6-5">6.5 摄像头添加</h2>
+<p>在视频网关Web管理界面中添加摄像头的操作步骤。</p>
+<div class="img-container" onclick="openLightbox('WGwt_img/img_055.png')">
+  <img src="WGwt_img/img_055.png" alt="摄像头添加1">
+</div>
+<div class="img-container" onclick="openLightbox('WGwt_img/img_056.png')">
+  <img src="WGwt_img/img_056.png" alt="摄像头添加2">
+</div>
+<div class="img-container" onclick="openLightbox('WGwt_img/img_057.png')">
+  <img src="WGwt_img/img_057.png" alt="摄像头添加3">
+</div>
+<div class="img-container" onclick="openLightbox('WGwt_img/img_058.png')">
+  <img src="WGwt_img/img_058.emf" alt="摄像头添加4">
+</div>
+<div class="img-container" onclick="openLightbox('WGwt_img/img_059.png')">
+  <img src="WGwt_img/img_059.png" alt="摄像头添加5">
+</div>
+<div class="img-container" onclick="openLightbox('WGwt_img/img_060.png')">
+  <img src="WGwt_img/img_060.png" alt="摄像头添加6">
+</div>
+
+<h2 id="s6-6">6.6 摄像头播放</h2>
+<p>摄像头无法播放时的排查步骤：</p>
+<ol>
+<li><strong>检查是否离线：</strong>在设备列表中确认摄像头状态是否为在线</li>
+<li><strong>检查编码格式：</strong>确认摄像头的编码格式(H.264/H.265)是否被网关支持</li>
+<li><strong>检查子码流：</strong>如主码流无法播放，可尝试切换到子码流</li>
+<li><strong>检查网络连通性：</strong>确认网关能访问摄像头的IP地址</li>
+<li><strong>检查协议配置：</strong>确认接入方式(GB28181/ONVIF/RTSP/嵌入式)配置正确</li>
+</ol>
+</div>
+
+<!-- ================================================================ -->
+<!-- Section 7 -->
+<!-- ================================================================ -->
+<div class="doc-section">
+<h1 id="s7">7. 视频网关现场安装调试条件</h1>
+<p>视频网关现场安装调试前的准备工作。</p>
+
+<h2 id="s7-1">7.1 基本信息</h2>
+<p>了解现场的基本信息，包括学校名称、地址、联系人、网络环境等。</p>
+
+<h2 id="s7-2">7.2 目前汇聚方式</h2>
+<p>了解当前视频系统的汇聚方式，评估网关接入方案。</p>
+
+<h2 id="s7-3">7.3 预接入省厅的摄像头信息</h2>
+<p>收集预接入省厅的摄像头信息。</p>
+<p><strong>命名规则：</strong></p>
+<ul>
+<li>高校：按照高校编码规则命名</li>
+<li>教育局：按照教育局编码规则命名</li>
+</ul>
+
+<p><strong>摄像头清单（覆盖区域）：</strong></p>
+<div class="doc-table-wrapper">
+<table class="doc-table">
+<thead><tr><th>序号</th><th>覆盖区域</th><th>说明</th></tr></thead>
+<tbody>
+<tr><td>1</td><td>校门口</td><td>学校正门、侧门</td></tr>
+<tr><td>2</td><td>岗亭</td><td>门卫岗亭</td></tr>
+<tr><td>3</td><td>食堂</td><td>食堂出入口和内部</td></tr>
+<tr><td>4</td><td>操场</td><td>操场周边区域</td></tr>
+<tr><td>5</td><td>主干道</td><td>校园主要通行道路</td></tr>
+<tr><td>6</td><td>教学出入口</td><td>教学楼各出入口</td></tr>
+<tr><td>7</td><td>宿舍出入口</td><td>学生宿舍各出入口</td></tr>
+<tr><td>8</td><td>化学品存放</td><td>化学品存储区域</td></tr>
+<tr><td>9</td><td>其他</td><td>其他需要监控的区域</td></tr>
+</tbody>
+</table>
+</div>
+
+<h2 id="s7-4">7.4 网关网络环境</h2>
+<p>确认现场的网络环境，包括网络拓扑、带宽、IP规划、防火墙策略等，确保网关能够正常通信。</p>
+</div>
+
+<!-- ================================================================ -->
+<!-- Section 8 -->
+<!-- ================================================================ -->
+<div class="doc-section">
+<h1 id="s8">8. 视频网关安装</h1>
+<p>视频网关的完整安装流程和调试步骤。</p>
+
+<h2 id="s8-1">8.1 设备检查</h2>
+<p>安装前检查设备外观、接口、电源等是否完好。</p>
+<ul>
+<li>检查设备外观是否有损坏</li>
+<li>检查所有接口是否正常</li>
+<li>检查电源线和网线是否齐全</li>
+<li>确认设备型号和配置</li>
+</ul>
+
+<h2 id="s8-2">8.2 了解安装的流程</h2>
+<p>视频网关安装分为三个阶段：</p>
+<ul>
+<li><strong>安装前：</strong>设备检查、网络规划、信息收集</li>
+<li><strong>安装中：</strong>设备上架、网络连接、系统配置、摄像头接入</li>
+<li><strong>安装后：</strong>功能测试、问题排查、文档归档</li>
+</ul>
+<div class="img-container" onclick="openLightbox('WGwt_img/img_060.png')">
+  <img src="WGwt_img/img_060.png" alt="安装流程">
+</div>
+
+<h2 id="s8-3">8.3 Windows设备调试</h2>
+<p>Windows系统视频网关设备的调试步骤：</p>
+
+<p><strong>步骤1：设备开机与基本设置</strong></p>
+<div class="img-container" onclick="openLightbox('WGwt_img/img_061.png')">
+  <img src="WGwt_img/img_061.png" alt="调试步骤1">
+</div>
+
+<p><strong>步骤2：网络配置</strong></p>
+<div class="img-container" onclick="openLightbox('WGwt_img/img_062.png')">
+  <img src="WGwt_img/img_062.png" alt="调试步骤2">
+</div>
+
+<p><strong>步骤3：防火墙设置</strong></p>
+<div class="img-container" onclick="openLightbox('WGwt_img/img_063.png')">
+  <img src="WGwt_img/img_063.png" alt="调试步骤3">
+</div>
+<div class="img-container" onclick="openLightbox('WGwt_img/img_064.jpeg')">
+  <img src="WGwt_img/img_064.jpeg" alt="调试步骤4">
+</div>
+
+<p><strong>步骤4：服务配置</strong></p>
+<div class="img-container" onclick="openLightbox('WGwt_img/img_065.png')">
+  <img src="WGwt_img/img_065.png" alt="调试步骤5">
+</div>
+
+<p><strong>步骤5：端口配置</strong></p>
+<div class="img-container" onclick="openLightbox('WGwt_img/img_066.png')">
+  <img src="WGwt_img/img_066.png" alt="调试步骤6">
+</div>
+
+<p><strong>步骤6：网关服务启动</strong></p>
+<div class="img-container" onclick="openLightbox('WGwt_img/img_067.png')">
+  <img src="WGwt_img/img_067.png" alt="调试步骤7">
+</div>
+
+<p><strong>步骤7：摄像头接入测试</strong></p>
+<div class="img-container" onclick="openLightbox('WGwt_img/img_068.png')">
+  <img src="WGwt_img/img_068.png" alt="调试步骤8">
+</div>
+
+<p><strong>步骤8：国标对接配置</strong></p>
+<div class="img-container" onclick="openLightbox('WGwt_img/img_069.png')">
+  <img src="WGwt_img/img_069.png" alt="调试步骤9">
+</div>
+<div class="img-container" onclick="openLightbox('WGwt_img/img_070.emf')">
+  <img src="WGwt_img/img_070.emf" alt="调试步骤10">
+</div>
+
+<p><strong>步骤9：视频预览验证</strong></p>
+<div class="img-container" onclick="openLightbox('WGwt_img/img_071.png')">
+  <img src="WGwt_img/img_071.png" alt="调试步骤11">
+</div>
+<div class="img-container" onclick="openLightbox('WGwt_img/img_072.png')">
+  <img src="WGwt_img/img_072.png" alt="调试步骤12">
+</div>
+
+<p><strong>步骤10：海康AKSK配置</strong></p>
+<div class="img-container" onclick="openLightbox('WGwt_img/img_073.png')">
+  <img src="WGwt_img/img_073.png" alt="调试步骤13">
+</div>
+<div class="img-container" onclick="openLightbox('WGwt_img/img_041.png')">
+  <img src="WGwt_img/img_041.png" alt="AKSK配置">
+</div>
+
+<p><strong>最终确认与调试完成</strong></p>
+<div class="img-container" onclick="openLightbox('WGwt_img/img_074.png')">
+  <img src="WGwt_img/img_074.png" alt="调试完成">
+</div>
+<div class="img-container" onclick="openLightbox('WGwt_img/img_075.png')">
+  <img src="WGwt_img/img_075.png" alt="调试确认">
+</div>
+
+<h2 id="s8-4">8.4 照片拍摄</h2>
+<p>安装完成后，需要拍摄以下照片作为安装记录：</p>
+<ul>
+<li>设备正面照片</li>
+<li>设备后面板接线照片</li>
+<li>设备运行状态截图</li>
+<li>摄像头在线状态截图</li>
+<li>视频预览正常截图</li>
+</ul>
+</div>
+
+<!-- ================================================================ -->
+<!-- Section 9 -->
+<!-- ================================================================ -->
+<div class="doc-section">
+<h1 id="s9">9. 产品手册</h1>
+<p>视频网关产品手册相关图片资料。</p>
+<div class="img-container" onclick="openLightbox('WGwt_img/img_076.png')">
+  <img src="WGwt_img/img_076.png" alt="产品手册1">
+</div>
+<div class="img-container" onclick="openLightbox('WGwt_img/img_077.jpeg')">
+  <img src="WGwt_img/img_077.jpeg" alt="产品手册2">
+</div>
+<div class="img-container" onclick="openLightbox('WGwt_img/img_078.jpeg')">
+  <img src="WGwt_img/img_078.jpeg" alt="产品手册3">
+</div>
+</div>
+
+</div><!-- /content-inner -->
+</main>
+</div><!-- /app-wrapper -->
+
+<script>
+// ========== TOC Auto Generation ==========
+(function() {
+  const nav = document.getElementById('sidebarNav');
+  const headings = document.querySelectorAll('.doc-section h1, .doc-section h2, .doc-section h3');
+  let autoIdx = 0;
+
+  headings.forEach(h => {
+    const level = h.tagName.toLowerCase();
+    // Use existing id or auto-generate one
+    if (!h.id) {
+      h.id = 'auto-s-' + (autoIdx++);
+    }
+    const id = h.id;
+    const text = h.textContent.trim();
+
+    const a = document.createElement('a');
+    a.className = 'toc-item toc-level-' + level.charAt(1);
+    a.href = '#' + id;
+    a.textContent = text;
+    a.dataset.searchText = text.toLowerCase();
+    nav.appendChild(a);
+  });
+})();
+
+// ========== Scroll Spy ==========
+(function() {
+  const tocItems = document.querySelectorAll('.sidebar-nav .toc-item');
+  const sections = [];
+  tocItems.forEach(item => {
+    const id = item.getAttribute('href').slice(1);
+    const el = document.getElementById(id);
+    if (el) sections.push({ id, el, item });
+  });
+
+  function update() {
+    const scrollTop = window.scrollY;
+    const offset = 120;
+    let current = null;
+    for (let i = sections.length - 1; i >= 0; i--) {
+      if (sections[i].el.getBoundingClientRect().top <= offset) {
+        current = sections[i];
+        break;
+      }
+    }
+    tocItems.forEach(t => t.classList.remove('active'));
+    if (current) {
+      current.item.classList.add('active');
+      // ensure visible in sidebar
+      const nav = document.getElementById('sidebarNav');
+      const itemTop = current.item.offsetTop - nav.offsetTop;
+      const navScroll = nav.scrollTop;
+      const navHeight = nav.clientHeight;
+      if (itemTop < navScroll || itemTop > navScroll + navHeight - 40) {
+        nav.scrollTo({ top: itemTop - 60, behavior: 'smooth' });
+      }
+    }
+  }
+
+  let ticking = false;
+  window.addEventListener('scroll', () => {
+    if (!ticking) {
+      requestAnimationFrame(() => { update(); ticking = false; });
+      ticking = true;
+    }
+  });
+  update();
+})();
+
+// ========== Hamburger Menu ==========
+(function() {
+  const btn = document.getElementById('hamburgerBtn');
+  const sidebar = document.getElementById('sidebar');
+  const overlay = document.getElementById('sidebarOverlay');
+
+  function toggle() {
+    sidebar.classList.toggle('open');
+    overlay.classList.toggle('show');
+  }
+  btn.addEventListener('click', toggle);
+  overlay.addEventListener('click', toggle);
+
+  // Close on TOC click (mobile)
+  document.querySelectorAll('.sidebar-nav .toc-item').forEach(item => {
+    item.addEventListener('click', () => {
+      if (window.innerWidth <= 768) toggle();
+    });
+  });
+})();
+
+// ========== TOC Search/Filter ==========
+(function() {
+  const input = document.getElementById('tocSearch');
+  const items = document.querySelectorAll('.sidebar-nav .toc-item');
+
+  input.addEventListener('input', () => {
+    const q = input.value.toLowerCase().trim();
+    items.forEach(item => {
+      if (!q) {
+        item.classList.remove('toc-hidden');
+        return;
+      }
+      const text = item.dataset.searchText || '';
+      if (text.includes(q)) {
+        item.classList.remove('toc-hidden');
+      } else {
+        item.classList.add('toc-hidden');
+      }
+    });
+  });
+})();
+
+// ========== Lightbox ==========
+function openLightbox(src) {
+  const lb = document.getElementById('lightbox');
+  const img = document.getElementById('lightboxImg');
+  img.src = src;
+  lb.classList.add('show');
+  document.body.style.overflow = 'hidden';
+}
+
+(function() {
+  const lb = document.getElementById('lightbox');
+  const closeBtn = document.getElementById('lightboxClose');
+
+  function close() {
+    lb.classList.remove('show');
+    document.body.style.overflow = '';
+  }
+
+  closeBtn.addEventListener('click', close);
+  lb.addEventListener('click', (e) => {
+    if (e.target === lb) close();
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') close();
+  });
+})();
+
+// ========== Copy to Clipboard ==========
+function copyCode(btn) {
+  const code = btn.closest('.code-block').querySelector('code');
+  const text = code.textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = '已复制';
+    setTimeout(() => { btn.textContent = '复制'; }, 2000);
+  }).catch(() => {
+    // Fallback
+    const ta = document.createElement('textarea');
+    ta.value = text; ta.style.position = 'fixed'; ta.style.left = '-9999px';
+    document.body.appendChild(ta); ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    btn.textContent = '已复制';
+    setTimeout(() => { btn.textContent = '复制'; }, 2000);
+  });
+}
+
+// ========== Back to Top ==========
+(function() {
+  const btn = document.getElementById('backToTop');
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > 400) {
+      btn.classList.add('visible');
+    } else {
+      btn.classList.remove('visible');
+    }
+  });
+  btn.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+})();
+</script>
+
+</body>
+</html>
