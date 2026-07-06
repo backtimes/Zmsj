@@ -163,13 +163,28 @@ body {
 .img-container {
   display: inline-block; margin: 10px 0 14px; cursor: pointer;
   border-radius: 6px; overflow: hidden; border: 1px solid #e5e6eb;
-  transition: box-shadow 0.2s;
+  transition: box-shadow 0.2s; position: relative; background: #f7f8fa;
+  min-height: 120px; min-width: 200px;
+}
+.img-container::before {
+  content: ''; position: absolute; inset: 0; z-index: 1;
+  background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.4) 50%, rgba(255,255,255,0) 100%);
+  background-size: 200% 100%;
+  animation: imgShimmer 1.5s infinite;
+  pointer-events: none;
+}
+.img-container.loaded::before { display: none; }
+@keyframes imgShimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
 }
 .img-container:hover { box-shadow: 0 4px 12px rgba(22,119,255,0.15); }
 .img-container img {
   display: block; max-width: 100%; height: auto; max-height: 520px;
-  object-fit: contain;
+  object-fit: contain; opacity: 0; transition: opacity 0.3s ease;
+  position: relative; z-index: 2;
 }
+.img-container.loaded img { opacity: 1; }
 
 /* ========== Lightbox ========== */
 .lightbox {
@@ -299,10 +314,10 @@ shutdown /r /t 0</code></pre>
 <h2 id="s2-2">2.2 连接</h2>
 <p>使用XShell等SSH工具连接Linux设备。连接时需要设备的IP地址、用户名和密码。</p>
 <div class="img-container" onclick="openLightbox('WGwt_img/img_000.png')">
-  <img src="WGwt_img/img_000.png" alt="XShell连接Linux">
+  <img loading="lazy" src="WGwt_img/img_000.png" alt="XShell连接Linux">
 </div>
 <div class="img-container" onclick="openLightbox('WGwt_img/img_001.jpeg')">
-  <img src="WGwt_img/img_001.jpeg" alt="连接示例">
+  <img loading="lazy" src="WGwt_img/img_001.jpeg" alt="连接示例">
 </div>
 
 <h2 id="s2-3">2.3 网页查看</h2>
@@ -349,19 +364,19 @@ rm -rf /usr/local/sppvcell/plugins/DVM1G10504/CrashReport/</code></pre>
 </div>
 
 <div class="img-container" onclick="openLightbox('WGwt_img/img_002.jpeg')">
-  <img src="WGwt_img/img_002.jpeg" alt="清理内存">
+  <img loading="lazy" src="WGwt_img/img_002.jpeg" alt="清理内存">
 </div>
 <div class="img-container" onclick="openLightbox('WGwt_img/img_003.jpeg')">
-  <img src="WGwt_img/img_003.jpeg" alt="磁盘查看">
+  <img loading="lazy" src="WGwt_img/img_003.jpeg" alt="磁盘查看">
 </div>
 
 <h2 id="s2-7">2.7 黑色debian升级</h2>
 <p>升级Debian系统上的视频网关软件，需要使用升级包和安装脚本。</p>
 <div class="img-container" onclick="openLightbox('WGwt_img/img_004.jpeg')">
-  <img src="WGwt_img/img_004.jpeg" alt="升级步骤1">
+  <img loading="lazy" src="WGwt_img/img_004.jpeg" alt="升级步骤1">
 </div>
 <div class="img-container" onclick="openLightbox('WGwt_img/img_005.png')">
-  <img src="WGwt_img/img_005.png" alt="升级步骤2">
+  <img loading="lazy" src="WGwt_img/img_005.png" alt="升级步骤2">
 </div>
 
 <p><strong>查看系统版本：</strong></p>
@@ -383,7 +398,7 @@ chmod +x install_gateway.sh
 <h2 id="s2-8">2.8 组织树导入</h2>
 <p>通过Web管理界面导入组织树结构数据，用于管理摄像头资源的层级关系。</p>
 <div class="img-container" onclick="openLightbox('WGwt_img/img_006.png')">
-  <img src="WGwt_img/img_006.png" alt="组织树导入">
+  <img loading="lazy" src="WGwt_img/img_006.png" alt="组织树导入">
 </div>
 
 <h2 id="s2-9">2.9 网络配置</h2>
@@ -401,10 +416,10 @@ sudo nano /etc/network/interfaces</code></pre>
 <h2 id="s2-10">2.10 存储空间分配</h2>
 <p>使用GParted工具对磁盘分区进行扩容操作，以获得更多的可用存储空间。</p>
 <div class="img-container" onclick="openLightbox('WGwt_img/img_007.png')">
-  <img src="WGwt_img/img_007.png" alt="GParted分区1">
+  <img loading="lazy" src="WGwt_img/img_007.png" alt="GParted分区1">
 </div>
 <div class="img-container" onclick="openLightbox('WGwt_img/img_008.png')">
-  <img src="WGwt_img/img_008.png" alt="GParted分区2">
+  <img loading="lazy" src="WGwt_img/img_008.png" alt="GParted分区2">
 </div>
 
 <p><strong>分区扩容步骤：</strong></p>
@@ -427,10 +442,10 @@ sudo dpkg-reconfigure locales</code></pre>
 </div>
 
 <div class="img-container" onclick="openLightbox('WGwt_img/img_001.jpeg')">
-  <img src="WGwt_img/img_001.jpeg" alt="安装组件">
+  <img loading="lazy" src="WGwt_img/img_001.jpeg" alt="安装组件">
 </div>
 <div class="img-container" onclick="openLightbox('WGwt_img/img_051.png')">
-  <img src="WGwt_img/img_051.png" alt="字体安装">
+  <img loading="lazy" src="WGwt_img/img_051.png" alt="字体安装">
 </div>
 
 <h2 id="s2-11">2.11 Debian系统文件</h2>
@@ -497,7 +512,7 @@ sudo dpkg-reconfigure locales</code></pre>
 <h2 id="s2-12">2.12 大华国标对接(浙江金融职业技术学院)</h2>
 <p>大华国标对接配置流程，以浙江金融职业技术学院为例。</p>
 <div class="img-container" onclick="openLightbox('WGwt_img/img_009.png')">
-  <img src="WGwt_img/img_009.png" alt="大华国标对接">
+  <img loading="lazy" src="WGwt_img/img_009.png" alt="大华国标对接">
 </div>
 
 <h3 id="s2-12-1">2.12.1 卓美接收 (国标推送)</h3>
@@ -515,25 +530,25 @@ sudo dpkg-reconfigure locales</code></pre>
 
 <h3 id="s2-12-3">2.12.3 登录大华DH-AGS进行国标配置</h3>
 <div class="img-container" onclick="openLightbox('WGwt_img/img_011.png')">
-  <img src="WGwt_img/img_011.png" alt="DH-AGS配置1">
+  <img loading="lazy" src="WGwt_img/img_011.png" alt="DH-AGS配置1">
 </div>
 <div class="img-container" onclick="openLightbox('WGwt_img/img_012.png')">
-  <img src="WGwt_img/img_012.png" alt="DH-AGS配置2">
+  <img loading="lazy" src="WGwt_img/img_012.png" alt="DH-AGS配置2">
 </div>
 <div class="img-container" onclick="openLightbox('WGwt_img/img_013.png')">
-  <img src="WGwt_img/img_013.png" alt="DH-AGS配置3">
+  <img loading="lazy" src="WGwt_img/img_013.png" alt="DH-AGS配置3">
 </div>
 
 <h3 id="s2-12-4">2.12.4 登录大华运维管理中心要修改唯一标识码</h3>
 <p>在大华运维管理中心中修改设备的唯一标识码，确保与国标编码一致。</p>
 <div class="img-container" onclick="openLightbox('WGwt_img/img_014.png')">
-  <img src="WGwt_img/img_014.png" alt="修改唯一标识码">
+  <img loading="lazy" src="WGwt_img/img_014.png" alt="修改唯一标识码">
 </div>
 
 <h3 id="s2-12-5">2.12.5 摄像头推送</h3>
 <p>将摄像头视频流通过国标协议推送到上级平台。</p>
 <div class="img-container" onclick="openLightbox('WGwt_img/img_015.png')">
-  <img src="WGwt_img/img_015.png" alt="摄像头推送">
+  <img loading="lazy" src="WGwt_img/img_015.png" alt="摄像头推送">
 </div>
 </div>
 
@@ -550,7 +565,7 @@ sudo dpkg-reconfigure locales</code></pre>
 <h2 id="s3-2">3.2 设备管理口远程控制</h2>
 <p>通过设备的管理口进行远程控制操作。</p>
 <div class="img-container" onclick="openLightbox('WGwt_img/img_016.png')">
-  <img src="WGwt_img/img_016.png" alt="设备管理口">
+  <img loading="lazy" src="WGwt_img/img_016.png" alt="设备管理口">
 </div>
 
 <h3 id="s3-2-1">3.2.1 管理口连接</h3>
@@ -559,19 +574,19 @@ sudo dpkg-reconfigure locales</code></pre>
 <h3 id="s3-2-2">3.2.2 IP设置</h3>
 <p>将电脑的网络设置为与设备管理口同一网段的IP地址。</p>
 <div class="img-container" onclick="openLightbox('WGwt_img/img_017.png')">
-  <img src="WGwt_img/img_017.png" alt="IP设置">
+  <img loading="lazy" src="WGwt_img/img_017.png" alt="IP设置">
 </div>
 
 <h3 id="s3-2-3">3.2.3 浏览器输入连接</h3>
 <p>在浏览器中输入设备管理口的IP地址进行连接。</p>
 <div class="img-container" onclick="openLightbox('WGwt_img/img_018.png')">
-  <img src="WGwt_img/img_018.png" alt="浏览器连接">
+  <img loading="lazy" src="WGwt_img/img_018.png" alt="浏览器连接">
 </div>
 
 <h3 id="s3-2-4">3.2.4 远程控制</h3>
 <p>通过Web界面进行设备的远程控制，包括电源管理、KVM控制等。</p>
 <div class="img-container" onclick="openLightbox('WGwt_img/img_019.png')">
-  <img src="WGwt_img/img_019.png" alt="远程控制">
+  <img loading="lazy" src="WGwt_img/img_019.png" alt="远程控制">
 </div>
 
 <h2 id="s3-3">3.3 CentOS7系统</h2>
@@ -587,13 +602,13 @@ sudo dpkg-reconfigure locales</code></pre>
 <li>执行 <strong>exec /sbin/init</strong> 或 <strong>reboot -f</strong> 重启</li>
 </ol>
 <div class="img-container" onclick="openLightbox('WGwt_img/img_023.png')">
-  <img src="WGwt_img/img_023.png" alt="CentOS7密码重置">
+  <img loading="lazy" src="WGwt_img/img_023.png" alt="CentOS7密码重置">
 </div>
 
 <h3 id="s3-3-2">3.3.2 路由处理</h3>
 <p>配置CentOS 7的路由规则，确保设备能够正确访问内外网络。</p>
 <div class="img-container" onclick="openLightbox('WGwt_img/img_021.png')">
-  <img src="WGwt_img/img_021.png" alt="路由处理">
+  <img loading="lazy" src="WGwt_img/img_021.png" alt="路由处理">
 </div>
 <div class="code-block">
 <button class="copy-btn" onclick="copyCode(this)">复制</button>
@@ -633,7 +648,7 @@ sudo systemctl enable sunloginclient</code></pre>
 <li>通过PE系统修改Windows密码</li>
 </ol>
 <div class="img-container" onclick="openLightbox('WGwt_img/img_023.png')">
-  <img src="WGwt_img/img_023.png" alt="忘记密码处理">
+  <img loading="lazy" src="WGwt_img/img_023.png" alt="忘记密码处理">
 </div>
 
 <h3 id="s3-4-2">3.4.2 升级</h3>
@@ -662,7 +677,7 @@ sudo systemctl enable sunloginclient</code></pre>
 <p>如果360安全卫士误杀了视频网关程序，需要将其加入白名单或恢复被删除的文件。</p>
 <div class="info-box danger">注意：程序被360删掉了，需要在360的隔离区恢复，并添加到信任列表。</div>
 <div class="img-container" onclick="openLightbox('WGwt_img/img_025.png')">
-  <img src="WGwt_img/img_025.png" alt="360处理">
+  <img loading="lazy" src="WGwt_img/img_025.png" alt="360处理">
 </div>
 
 <h3 id="s3-4-7">3.4.7 永久路由添加</h3>
@@ -680,32 +695,32 @@ sudo systemctl enable sunloginclient</code></pre>
 <h3 id="s3-4-8">3.4.8 文件含义</h3>
 <p>了解Windows系统下视频网关各文件和目录的含义。</p>
 <div class="img-container" onclick="openLightbox('WGwt_img/img_026.png')">
-  <img src="WGwt_img/img_026.png" alt="文件含义1">
+  <img loading="lazy" src="WGwt_img/img_026.png" alt="文件含义1">
 </div>
 <div class="img-container" onclick="openLightbox('WGwt_img/img_027.png')">
-  <img src="WGwt_img/img_027.png" alt="文件含义2">
+  <img loading="lazy" src="WGwt_img/img_027.png" alt="文件含义2">
 </div>
 
 <h3 id="s3-4-9">3.4.9 网页(Nginx)</h3>
 <p>Windows系统使用Nginx作为Web服务器，提供Web管理界面。</p>
 <div class="img-container" onclick="openLightbox('WGwt_img/img_028.png')">
-  <img src="WGwt_img/img_028.png" alt="Nginx配置">
+  <img loading="lazy" src="WGwt_img/img_028.png" alt="Nginx配置">
 </div>
 
 <h3 id="s3-4-10">3.4.10 国标接入(大华DSS)</h3>
 <p>Windows系统下配置大华DSS国标接入。</p>
 <div class="img-container" onclick="openLightbox('WGwt_img/img_029.png')">
-  <img src="WGwt_img/img_029.png" alt="国标接入配置1">
+  <img loading="lazy" src="WGwt_img/img_029.png" alt="国标接入配置1">
 </div>
 <div class="img-container" onclick="openLightbox('WGwt_img/img_030.png')">
-  <img src="WGwt_img/img_030.png" alt="国标接入配置2">
+  <img loading="lazy" src="WGwt_img/img_030.png" alt="国标接入配置2">
 </div>
 <div class="info-box info">修改 Config.ini 中的 <strong>RTPProtocol=1</strong> 参数。</div>
 
 <h2 id="s3-5">3.5 参数</h2>
 <p>银色设备的各项配置参数说明。</p>
 <div class="img-container" onclick="openLightbox('WGwt_img/img_031.png')">
-  <img src="WGwt_img/img_031.png" alt="参数配置">
+  <img loading="lazy" src="WGwt_img/img_031.png" alt="参数配置">
 </div>
 </div>
 
@@ -719,7 +734,7 @@ sudo systemctl enable sunloginclient</code></pre>
 <h2 id="s4-1">4.1 产品</h2>
 <p>数据网关产品外观及接口说明。</p>
 <div class="img-container" onclick="openLightbox('WGwt_img/img_032.jpeg')">
-  <img src="WGwt_img/img_032.jpeg" alt="数据网关产品">
+  <img loading="lazy" src="WGwt_img/img_032.jpeg" alt="数据网关产品">
 </div>
 
 <h2 id="s4-2">4.2 数据网关配置</h2>
@@ -848,7 +863,7 @@ sudo reboot</code></pre>
 <h2 id="s6-2">6.2 获取海康平台的AKSK</h2>
 <p>从海康运管中心获取Access Key(AK)和Secret Key(SK)。</p>
 <div class="img-container" onclick="openLightbox('WGwt_img/img_041.png')">
-  <img src="WGwt_img/img_041.png" alt="获取海康AKSK">
+  <img loading="lazy" src="WGwt_img/img_041.png" alt="获取海康AKSK">
 </div>
 <p>获取步骤：</p>
 <ol>
@@ -861,28 +876,28 @@ sudo reboot</code></pre>
 <h2 id="s6-3">6.3 海康寻找IP</h2>
 <p>使用海康工具搜索局域网内海康摄像头的IP地址。</p>
 <div class="img-container" onclick="openLightbox('WGwt_img/img_042.png')">
-  <img src="WGwt_img/img_042.png" alt="海康寻找IP1">
+  <img loading="lazy" src="WGwt_img/img_042.png" alt="海康寻找IP1">
 </div>
 <div class="img-container" onclick="openLightbox('WGwt_img/img_043.png')">
-  <img src="WGwt_img/img_043.png" alt="海康寻找IP2">
+  <img loading="lazy" src="WGwt_img/img_043.png" alt="海康寻找IP2">
 </div>
 
 <h2 id="s6-4">6.4 视频接入四种方式</h2>
 <p>视频网关支持四种摄像头接入方式：</p>
 <div class="img-container" onclick="openLightbox('WGwt_img/img_044.png')">
-  <img src="WGwt_img/img_044.png" alt="视频接入方式1">
+  <img loading="lazy" src="WGwt_img/img_044.png" alt="视频接入方式1">
 </div>
 <div class="img-container" onclick="openLightbox('WGwt_img/img_045.png')">
-  <img src="WGwt_img/img_045.png" alt="视频接入方式2">
+  <img loading="lazy" src="WGwt_img/img_045.png" alt="视频接入方式2">
 </div>
 
 <h3 id="s6-4-1">6.4.1 方式一：GB28181</h3>
 <p>通过国标GB28181协议接入摄像头，适合大规模、跨平台的视频联网。</p>
 <div class="img-container" onclick="openLightbox('WGwt_img/img_046.png')">
-  <img src="WGwt_img/img_046.png" alt="GB28181配置1">
+  <img loading="lazy" src="WGwt_img/img_046.png" alt="GB28181配置1">
 </div>
 <div class="img-container" onclick="openLightbox('WGwt_img/img_047.png')">
-  <img src="WGwt_img/img_047.png" alt="GB28181配置2">
+  <img loading="lazy" src="WGwt_img/img_047.png" alt="GB28181配置2">
 </div>
 <ul>
 <li><strong>上级域IP：</strong>由上级平台提供</li>
@@ -893,19 +908,19 @@ sudo reboot</code></pre>
 <h3 id="s6-4-2">6.4.2 方式二：ONVIF</h3>
 <p>通过ONVIF协议接入摄像头，适用于支持ONVIF标准的大部分品牌摄像头。</p>
 <div class="img-container" onclick="openLightbox('WGwt_img/img_048.png')">
-  <img src="WGwt_img/img_048.png" alt="ONVIF配置1">
+  <img loading="lazy" src="WGwt_img/img_048.png" alt="ONVIF配置1">
 </div>
 <div class="img-container" onclick="openLightbox('WGwt_img/img_049.png')">
-  <img src="WGwt_img/img_049.png" alt="ONVIF配置2">
+  <img loading="lazy" src="WGwt_img/img_049.png" alt="ONVIF配置2">
 </div>
 <div class="img-container" onclick="openLightbox('WGwt_img/img_050.png')">
-  <img src="WGwt_img/img_050.png" alt="ONVIF配置3">
+  <img loading="lazy" src="WGwt_img/img_050.png" alt="ONVIF配置3">
 </div>
 
 <h3 id="s6-4-3">6.4.3 方式三：RTSP</h3>
 <p>通过RTSP协议直接拉取摄像头的视频流。</p>
 <div class="img-container" onclick="openLightbox('WGwt_img/img_052.png')">
-  <img src="WGwt_img/img_052.png" alt="RTSP配置">
+  <img loading="lazy" src="WGwt_img/img_052.png" alt="RTSP配置">
 </div>
 <p><strong>常见品牌RTSP地址格式：</strong></p>
 <div class="code-block">
@@ -923,31 +938,31 @@ rtsp://用户名:密码@IP地址/cam/realmonitor?channel=1&amp;subtype=0</code><
 <h3 id="s6-4-4">6.4.4 方式四：嵌入式</h3>
 <p>嵌入式接入方式，将摄像头SDK嵌入到网关系统中。</p>
 <div class="img-container" onclick="openLightbox('WGwt_img/img_053.png')">
-  <img src="WGwt_img/img_053.png" alt="嵌入式配置1">
+  <img loading="lazy" src="WGwt_img/img_053.png" alt="嵌入式配置1">
 </div>
 <div class="img-container" onclick="openLightbox('WGwt_img/img_054.png')">
-  <img src="WGwt_img/img_054.png" alt="嵌入式配置2">
+  <img loading="lazy" src="WGwt_img/img_054.png" alt="嵌入式配置2">
 </div>
 
 <h2 id="s6-5">6.5 摄像头添加</h2>
 <p>在视频网关Web管理界面中添加摄像头的操作步骤。</p>
 <div class="img-container" onclick="openLightbox('WGwt_img/img_055.png')">
-  <img src="WGwt_img/img_055.png" alt="摄像头添加1">
+  <img loading="lazy" src="WGwt_img/img_055.png" alt="摄像头添加1">
 </div>
 <div class="img-container" onclick="openLightbox('WGwt_img/img_056.png')">
-  <img src="WGwt_img/img_056.png" alt="摄像头添加2">
+  <img loading="lazy" src="WGwt_img/img_056.png" alt="摄像头添加2">
 </div>
 <div class="img-container" onclick="openLightbox('WGwt_img/img_057.png')">
-  <img src="WGwt_img/img_057.png" alt="摄像头添加3">
+  <img loading="lazy" src="WGwt_img/img_057.png" alt="摄像头添加3">
 </div>
 <div class="img-container" onclick="openLightbox('WGwt_img/img_058.png')">
-  <img src="WGwt_img/img_058.emf" alt="摄像头添加4">
+  <img loading="lazy" src="WGwt_img/img_058.emf" alt="摄像头添加4">
 </div>
 <div class="img-container" onclick="openLightbox('WGwt_img/img_059.png')">
-  <img src="WGwt_img/img_059.png" alt="摄像头添加5">
+  <img loading="lazy" src="WGwt_img/img_059.png" alt="摄像头添加5">
 </div>
 <div class="img-container" onclick="openLightbox('WGwt_img/img_060.png')">
-  <img src="WGwt_img/img_060.png" alt="摄像头添加6">
+  <img loading="lazy" src="WGwt_img/img_060.png" alt="摄像头添加6">
 </div>
 
 <h2 id="s6-6">6.6 摄像头播放</h2>
@@ -1028,7 +1043,7 @@ rtsp://用户名:密码@IP地址/cam/realmonitor?channel=1&amp;subtype=0</code><
 <li><strong>安装后：</strong>功能测试、问题排查、文档归档</li>
 </ul>
 <div class="img-container" onclick="openLightbox('WGwt_img/img_060.png')">
-  <img src="WGwt_img/img_060.png" alt="安装流程">
+  <img loading="lazy" src="WGwt_img/img_060.png" alt="安装流程">
 </div>
 
 <h2 id="s8-3">8.3 Windows设备调试</h2>
@@ -1036,72 +1051,72 @@ rtsp://用户名:密码@IP地址/cam/realmonitor?channel=1&amp;subtype=0</code><
 
 <p><strong>步骤1：设备开机与基本设置</strong></p>
 <div class="img-container" onclick="openLightbox('WGwt_img/img_061.png')">
-  <img src="WGwt_img/img_061.png" alt="调试步骤1">
+  <img loading="lazy" src="WGwt_img/img_061.png" alt="调试步骤1">
 </div>
 
 <p><strong>步骤2：网络配置</strong></p>
 <div class="img-container" onclick="openLightbox('WGwt_img/img_062.png')">
-  <img src="WGwt_img/img_062.png" alt="调试步骤2">
+  <img loading="lazy" src="WGwt_img/img_062.png" alt="调试步骤2">
 </div>
 
 <p><strong>步骤3：防火墙设置</strong></p>
 <div class="img-container" onclick="openLightbox('WGwt_img/img_063.png')">
-  <img src="WGwt_img/img_063.png" alt="调试步骤3">
+  <img loading="lazy" src="WGwt_img/img_063.png" alt="调试步骤3">
 </div>
 <div class="img-container" onclick="openLightbox('WGwt_img/img_064.jpeg')">
-  <img src="WGwt_img/img_064.jpeg" alt="调试步骤4">
+  <img loading="lazy" src="WGwt_img/img_064.jpeg" alt="调试步骤4">
 </div>
 
 <p><strong>步骤4：服务配置</strong></p>
 <div class="img-container" onclick="openLightbox('WGwt_img/img_065.png')">
-  <img src="WGwt_img/img_065.png" alt="调试步骤5">
+  <img loading="lazy" src="WGwt_img/img_065.png" alt="调试步骤5">
 </div>
 
 <p><strong>步骤5：端口配置</strong></p>
 <div class="img-container" onclick="openLightbox('WGwt_img/img_066.png')">
-  <img src="WGwt_img/img_066.png" alt="调试步骤6">
+  <img loading="lazy" src="WGwt_img/img_066.png" alt="调试步骤6">
 </div>
 
 <p><strong>步骤6：网关服务启动</strong></p>
 <div class="img-container" onclick="openLightbox('WGwt_img/img_067.png')">
-  <img src="WGwt_img/img_067.png" alt="调试步骤7">
+  <img loading="lazy" src="WGwt_img/img_067.png" alt="调试步骤7">
 </div>
 
 <p><strong>步骤7：摄像头接入测试</strong></p>
 <div class="img-container" onclick="openLightbox('WGwt_img/img_068.png')">
-  <img src="WGwt_img/img_068.png" alt="调试步骤8">
+  <img loading="lazy" src="WGwt_img/img_068.png" alt="调试步骤8">
 </div>
 
 <p><strong>步骤8：国标对接配置</strong></p>
 <div class="img-container" onclick="openLightbox('WGwt_img/img_069.png')">
-  <img src="WGwt_img/img_069.png" alt="调试步骤9">
+  <img loading="lazy" src="WGwt_img/img_069.png" alt="调试步骤9">
 </div>
 <div class="img-container" onclick="openLightbox('WGwt_img/img_070.emf')">
-  <img src="WGwt_img/img_070.emf" alt="调试步骤10">
+  <img loading="lazy" src="WGwt_img/img_070.emf" alt="调试步骤10">
 </div>
 
 <p><strong>步骤9：视频预览验证</strong></p>
 <div class="img-container" onclick="openLightbox('WGwt_img/img_071.png')">
-  <img src="WGwt_img/img_071.png" alt="调试步骤11">
+  <img loading="lazy" src="WGwt_img/img_071.png" alt="调试步骤11">
 </div>
 <div class="img-container" onclick="openLightbox('WGwt_img/img_072.png')">
-  <img src="WGwt_img/img_072.png" alt="调试步骤12">
+  <img loading="lazy" src="WGwt_img/img_072.png" alt="调试步骤12">
 </div>
 
 <p><strong>步骤10：海康AKSK配置</strong></p>
 <div class="img-container" onclick="openLightbox('WGwt_img/img_073.png')">
-  <img src="WGwt_img/img_073.png" alt="调试步骤13">
+  <img loading="lazy" src="WGwt_img/img_073.png" alt="调试步骤13">
 </div>
 <div class="img-container" onclick="openLightbox('WGwt_img/img_041.png')">
-  <img src="WGwt_img/img_041.png" alt="AKSK配置">
+  <img loading="lazy" src="WGwt_img/img_041.png" alt="AKSK配置">
 </div>
 
 <p><strong>最终确认与调试完成</strong></p>
 <div class="img-container" onclick="openLightbox('WGwt_img/img_074.png')">
-  <img src="WGwt_img/img_074.png" alt="调试完成">
+  <img loading="lazy" src="WGwt_img/img_074.png" alt="调试完成">
 </div>
 <div class="img-container" onclick="openLightbox('WGwt_img/img_075.png')">
-  <img src="WGwt_img/img_075.png" alt="调试确认">
+  <img loading="lazy" src="WGwt_img/img_075.png" alt="调试确认">
 </div>
 
 <h2 id="s8-4">8.4 照片拍摄</h2>
@@ -1122,13 +1137,13 @@ rtsp://用户名:密码@IP地址/cam/realmonitor?channel=1&amp;subtype=0</code><
 <h1 id="s9">9. 产品手册</h1>
 <p>视频网关产品手册相关图片资料。</p>
 <div class="img-container" onclick="openLightbox('WGwt_img/img_076.png')">
-  <img src="WGwt_img/img_076.png" alt="产品手册1">
+  <img loading="lazy" src="WGwt_img/img_076.png" alt="产品手册1">
 </div>
 <div class="img-container" onclick="openLightbox('WGwt_img/img_077.jpeg')">
-  <img src="WGwt_img/img_077.jpeg" alt="产品手册2">
+  <img loading="lazy" src="WGwt_img/img_077.jpeg" alt="产品手册2">
 </div>
 <div class="img-container" onclick="openLightbox('WGwt_img/img_078.jpeg')">
-  <img src="WGwt_img/img_078.jpeg" alt="产品手册3">
+  <img loading="lazy" src="WGwt_img/img_078.jpeg" alt="产品手册3">
 </div>
 </div>
 
@@ -1137,6 +1152,17 @@ rtsp://用户名:密码@IP地址/cam/realmonitor?channel=1&amp;subtype=0</code><
 </div><!-- /app-wrapper -->
 
 <script>
+// ========== Image Lazy Load Visual Feedback ==========
+(function() {
+  document.querySelectorAll('.img-container img[loading="lazy"]').forEach(img => {
+    if (img.complete) {
+      img.closest('.img-container').classList.add('loaded');
+    } else {
+      img.addEventListener('load', () => img.closest('.img-container').classList.add('loaded'));
+      img.addEventListener('error', () => img.closest('.img-container').classList.add('loaded'));
+    }
+  });
+})();
 // ========== TOC Auto Generation ==========
 (function() {
   const nav = document.getElementById('sidebarNav');
